@@ -1,3 +1,5 @@
+// STARI NAČIN: QR bez tajnog koda (lokacija se otvara, ali pečat se NE dodjeljuje).
+// Za table koristite QR iz admin dashboarda (/admin → Lokacije → QR kod), koji sadrži tajni kod ?k=…
 // Pravi QR kod (PNG za štampu i SVG za graviranje) za svaku lokaciju.
 // Pokreni:  npm run qr -- https://tvoja-domena.ba
 import QRCode from "qrcode";

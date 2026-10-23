@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Print · Lukavac Info</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="/admin/print.css">
+<style id="pageSize"></style>
+</head>
+<body>
+  <div class="toolbar no-print">
+    <button type="button" onclick="window.print()">Štampaj</button>
+    <select id="size" aria-label="Format">
+      <option value="a4">Tabla A4</option><option value="a5">Tabla A5</option><option value="small">Mali (naljepnica 9×12 cm)</option>
+    </select>
+    <select id="lang" aria-label="Jezik sadržaja" hidden><option value="bs">BS</option><option value="en">EN</option><option value="de">DE</option></select>
+    <span id="msg"></span>
+  </div>
+  <div id="out"></div>
+  <script src="/admin/vendor/supabase.js"></script>
+  <script src="/admin/vendor/qrcode.js"></script>
+  <script src="/admin/shared.js"></script>
+  <script src="/admin/print.js"></script>
+</body>
+</html>

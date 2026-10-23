@@ -1,0 +1,51 @@
+*{box-sizing:border-box}
+html,body{margin:0;background:#e9e7e2;color:#14231f;font:15px/1.5 "Source Sans 3",system-ui,sans-serif}
+.toolbar{position:sticky;top:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:#fff;border-bottom:1px solid #ddd;z-index:5}
+.toolbar button,.toolbar select{height:34px;font-family:inherit;font-weight:600;font-size:14px;padding:0 12px;border-radius:8px;border:1px solid #ccc;background:#fff}
+.toolbar button{background:#123b34;color:#fff;border-color:#123b34;cursor:pointer}
+#out{padding:16px;display:flex;justify-content:center}
+
+/* TABLA */
+.board{background:#fff;color:#123b34;text-align:center;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.board.a4{width:210mm;height:297mm;padding:22mm 18mm 14mm}
+.board.a5{width:148mm;height:210mm;padding:14mm 12mm 9mm;font-size:11px}
+.board.small{width:90mm;height:120mm;padding:7mm 6mm 5mm;font-size:8px;border:0.3mm solid #123b34;border-radius:4mm}
+.b-eyebrow{font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:1.05em;color:#e4572e}
+.board h1{font:700 3.6em/1.05 Fraunces,Georgia,serif;margin:.25em 0 .1em;text-wrap:balance}
+.board.a4 h1{font-size:46px}
+.b-sub{font-size:1.4em;color:#5a6b66;min-height:1.2em}
+.b-qr{width:62%;margin:1.4em auto 1.2em;padding:2.5mm;border:0.6mm solid #123b34;border-radius:4mm;background:#fff}
+.board.small .b-qr{width:72%;margin:.8em auto}
+.b-qr svg{width:100%;height:auto;display:block}
+.b-cta{max-width:150mm}
+.b-cta p{margin:.25em 0;font-size:1.25em;line-height:1.35}
+.board.a4 .b-cta p{font-size:17px}
+.board.small .b-cta p:not(:first-child){display:none}
+.b-url{margin-top:auto;font:600 1.4em/1.2 ui-monospace,Menlo,Consolas,monospace;color:#14231f}
+.board.a4 .b-url{font-size:18px}
+.b-foot{margin-top:.6em;color:#5a6b66;font-size:1.05em}
+
+/* SADRŽAJ */
+.content{background:#fff;width:210mm;max-width:100%;padding:16mm;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.content h1{font:700 30px/1.15 Fraunces,Georgia,serif;margin:6px 0}
+.content h2{font:700 19px/1.2 Fraunces,Georgia,serif;margin:18px 0 6px;break-after:avoid}
+.content h3{font-size:15px;margin:12px 0 4px;break-after:avoid}
+.c-meta{font-size:12px;color:#5a6b66}
+.c-short{font-size:17px;color:#33433f}
+.c-hero{width:100%;max-height:95mm;object-fit:cover;border-radius:4px}
+.c-credit,.c-small{font-size:12px;color:#5a6b66}
+.c-text p,.content p{margin:0 0 8px}
+.c-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.c-gal figure{margin:0;break-inside:avoid}
+.c-gal img{width:100%;height:40mm;object-fit:cover;border-radius:3px}
+.c-gal figcaption{font-size:11px;color:#5a6b66}
+
+@media print{
+  html,body{background:#fff}
+  .no-print{display:none!important}
+  #out{padding:0;display:block}
+  .board,.content{box-shadow:none;margin:0 auto}
+  .content{width:auto;padding:0}
+  .board{break-after:page}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}

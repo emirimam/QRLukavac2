@@ -18,7 +18,11 @@
       share: "Podijeli", whereNext: "Kuda dalje?", events: "Šta se dešava u Lukavcu", navigate: "Navigacija do ovdje", showRoute: "Prikaži put na mapi",
       passport: "Lukavac pasoš", stamps: (n, t) => `Pečat ${n} od ${t}`, allStamps: "Svi pečati su vaši!", visited: "posjećeno",
       listen: "Poslušaj", pause: "Pauza", readMore: "Pročitaj više", moreAbout: "Saznaj više o ovom mjestu", sources: "Izvori", foot: "pješice", car: "autom", approx: "približno",
-      shareText: n => `${n} – digitalna info staza Lukavca`, close: "Zatvori"
+      shareText: n => `${n} – digitalna info staza Lukavca`, close: "Zatvori",
+      stampNew: "Novi pečat!", stampHave: "Pečat za ovu lokaciju već imate.", stampNoCode: "Pečat se dobija skeniranjem QR koda na info tabli.",
+      stampBad: "Ovaj QR kod nije važeći. Skenirajte kod sa info table.", gpsOk: "GPS potvrđen", stampWait: "Provjeravamo pečat…",
+      rewards: "Nagrade", rewardShow: "Pokažite ovaj kod kod sponzora:", rewardUsed: "Iskorišteno", rewardUntil: d => `Važi do ${d}`,
+      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} pečata`, rewardPlaces: "Potrebne lokacije:", sponsor: "Sponzor"
     },
     en: {
       welcome: "Welcome to Lukavac", youAreAt: "You are at:", introHint: "See where the other sights are and how to get there.",
@@ -26,7 +30,11 @@
       share: "Share", whereNext: "Where next?", events: "What's on in Lukavac", navigate: "Directions", showRoute: "Show route on map",
       passport: "Lukavac passport", stamps: (n, t) => `Stamp ${n} of ${t}`, allStamps: "You've collected every stamp!", visited: "visited",
       listen: "Listen", pause: "Pause", readMore: "Read more", moreAbout: "Learn more about this place", sources: "Sources", foot: "on foot", car: "by car", approx: "approx.",
-      shareText: n => `${n} – Lukavac digital info trail`, close: "Close"
+      shareText: n => `${n} – Lukavac digital info trail`, close: "Close",
+      stampNew: "New stamp!", stampHave: "You already have the stamp for this place.", stampNoCode: "Scan the QR code on the info board to get a stamp.",
+      stampBad: "This QR code is not valid. Scan the code on the info board.", gpsOk: "GPS confirmed", stampWait: "Checking your stamp…",
+      rewards: "Rewards", rewardShow: "Show this code to the sponsor:", rewardUsed: "Redeemed", rewardUntil: d => `Valid until ${d}`,
+      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} stamps`, rewardPlaces: "Required places:", sponsor: "Sponsor"
     },
     de: {
       welcome: "Willkommen in Lukavac", youAreAt: "Sie sind hier:", introHint: "Sehen Sie, wo die anderen Orte liegen und wie Sie hinkommen.",
@@ -34,7 +42,11 @@
       share: "Teilen", whereNext: "Wohin als Nächstes?", events: "Veranstaltungen in Lukavac", navigate: "Route starten", showRoute: "Weg auf der Karte zeigen",
       passport: "Lukavac-Pass", stamps: (n, t) => `Stempel ${n} von ${t}`, allStamps: "Sie haben alle Stempel!", visited: "besucht",
       listen: "Anhören", pause: "Pause", readMore: "Mehr lesen", moreAbout: "Mehr über diesen Ort", sources: "Quellen", foot: "zu Fuß", car: "mit dem Auto", approx: "ca.",
-      shareText: n => `${n} – Digitaler Info-Pfad Lukavac`, close: "Schließen"
+      shareText: n => `${n} – Digitaler Info-Pfad Lukavac`, close: "Schließen",
+      stampNew: "Neuer Stempel!", stampHave: "Diesen Stempel haben Sie bereits.", stampNoCode: "Scannen Sie den QR-Code auf der Infotafel, um einen Stempel zu erhalten.",
+      stampBad: "Dieser QR-Code ist ungültig. Scannen Sie den Code auf der Infotafel.", gpsOk: "GPS bestätigt", stampWait: "Stempel wird geprüft…",
+      rewards: "Belohnungen", rewardShow: "Zeigen Sie diesen Code beim Sponsor:", rewardUsed: "Eingelöst", rewardUntil: d => `Gültig bis ${d}`,
+      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} Stempel`, rewardPlaces: "Benötigte Orte:", sponsor: "Sponsor"
     }
   };
 
@@ -156,19 +168,115 @@
   }
 
   /* ---------- pasoš ---------- */
-  function stamps() { try { return JSON.parse(store.get("stamps")) || []; } catch { return []; } }
-  function addStamp(id) { const s = stamps(); if (!s.includes(id)) { s.push(id); store.set("stamps", JSON.stringify(s)); } }
+  // Dva načina rada:
+  //  - "db": podaci dolaze iz /api; pečat dodjeljuje SERVER samo uz ispravan kod iz QR-a (?k=…)
+  //  - "static" (rezerva dok baza nije podešena): stari način, pečat se pamti u pregledniku
+  let apiMode = false, passportData = null, scanResult = null;
+  function deviceId() {
+    let id = store.get("deviceId");
+    if (!id || !/^[A-Za-z0-9-]{16,64}$/.test(id)) {
+      id = (crypto.randomUUID ? crypto.randomUUID() : Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, "0")).join(""));
+      store.set("deviceId", id);
+    }
+    return id;
+  }
+  function localStamps() { try { return JSON.parse(store.get("stamps")) || []; } catch { return []; } }
+  function stamps() { return apiMode ? (passportData?.stamps || []).map(x => x.slug) : localStamps(); }
+  function addStamp(id) { const s = localStamps(); if (!s.includes(id)) { s.push(id); store.set("stamps", JSON.stringify(s)); } }
+  const stampLocs = () => data.locations.filter(l => !apiMode || l.stampEnabled !== false);
   function renderPassport() {
-    const s = stamps().filter(id => data.locations.some(l => l.id === id));
-    const total = data.locations.length;
+    if (apiMode && data.stampsEnabled === false) { $("passport").hidden = true; return; }
+    const pool = stampLocs();
+    const s = stamps().filter(id => pool.some(l => l.id === id));
+    const total = pool.length;
     $("passportCount").textContent = s.length >= total ? t("allStamps") : t("stamps", s.length, total);
     $("passportStamp").textContent = tr(here.name);
-    $("passportDots").innerHTML = data.locations.map(l =>
-      `<span class="pdot ${s.includes(l.id) ? "on" : ""}" title="${esc(tr(l.name))}">${esc(tr(l.name))}</span>`).join("");
-    const reward = tr(data.passport?.reward);
+    const gpsSet = new Set((passportData?.stamps || []).filter(x => x.gpsVerified).map(x => x.slug));
+    $("passportDots").innerHTML = pool.map(l =>
+      `<span class="pdot ${s.includes(l.id) ? "on" : ""}" title="${esc(tr(l.name))}">${esc(tr(l.name))}${gpsSet.has(l.id) ? ' <span class="gps-tick" title="' + esc(t("gpsOk")) + '">⌖</span>' : ""}</span>`).join("");
+    // status pečata za trenutno skeniranje
+    const st = $("passportStatus");
+    let msg = "", cls = "";
+    if (apiMode && here.stampEnabled !== false) {
+      if (!scanResult) msg = scanPending ? t("stampWait") : "";
+      else if (scanResult.stamp === "awarded") { msg = t("stampNew"); cls = "ok"; }
+      else if (scanResult.stamp === "duplicate") { msg = t("stampHave"); cls = "ok"; }
+      else if (scanResult.stamp === "no_code") msg = t("stampNoCode");
+      else if (scanResult.stamp === "invalid_code" || scanResult.stamp === "rate_limited") { msg = t("stampBad"); cls = "bad"; }
+      if (scanResult?.gpsVerified && cls === "ok") msg += ` · ⌖ ${t("gpsOk")}`;
+    }
+    st.textContent = msg; st.className = "passport-status " + cls; st.hidden = !msg;
+    $("passportStamp").classList.toggle("dim", apiMode && !s.includes(here.id));
+    const reward = apiMode ? tr(data.passport?.intro) : tr(data.passport?.reward);
     $("passportReward").textContent = reward || "";
     $("passportReward").hidden = !reward;
+    renderRewards();
     $("passport").hidden = false;
+  }
+  function renderRewards() {
+    const box = $("rewards");
+    const list = apiMode ? (passportData?.rewards || []) : [];
+    if (!list.length) { box.hidden = true; box.innerHTML = ""; return; }
+    const loc = lang === "bs" ? "bs-BA" : lang === "de" ? "de-DE" : "en-GB";
+    const nameOf = slug => tr(data.locations.find(l => l.id === slug)?.name) || slug;
+    const have = new Set(stamps());
+    box.innerHTML = `<h3>${esc(t("rewards"))}</h3>` + list.map(r => {
+      const sp = r.sponsor || {};
+      const logo = sp.logo ? `<img class="rw-logo" src="${esc(sp.logo)}" alt="${esc(sp.name || "")}" loading="lazy">` : "";
+      const spName = sp.name ? (sp.url ? `<a href="${esc(sp.url)}" target="_blank" rel="noopener">${esc(sp.name)}</a>` : esc(sp.name)) : "";
+      const need = [];
+      if (r.requiredStamps) {
+        const pct = Math.min(100, Math.round(100 * Math.min(r.have, r.requiredStamps) / r.requiredStamps));
+        need.push(`<div class="rw-prog"><span style="width:${pct}%"></span></div><div class="rw-need">${esc(t("rewardNeed", r.have, r.requiredStamps))}</div>`);
+      }
+      if ((r.requiredLocations || []).length) {
+        need.push(`<div class="rw-need">${esc(t("rewardPlaces"))} ${r.requiredLocations.map(sl => `<span class="rw-pl ${have.has(sl) ? "on" : ""}">${have.has(sl) ? "✓ " : ""}${esc(nameOf(sl))}</span>`).join(" ")}</div>`);
+      }
+      const until = r.validUntil ? `<div class="rw-until">${esc(t("rewardUntil", new Date(r.validUntil + "T12:00:00").toLocaleDateString(loc)))}</div>` : "";
+      const won = r.claimCode ? `<div class="rw-code ${r.redeemed ? "used" : ""}"><div>${esc(r.redeemed ? t("rewardUsed") : t("rewardShow"))}</div><b>${esc(r.claimCode)}</b></div>` : "";
+      return `<div class="reward ${r.claimCode ? "won" : ""}">
+        <div class="rw-head">${logo}<div><div class="rw-title">${esc(tr(r.title) || "")}</div>${spName ? `<div class="rw-sponsor">${esc(t("sponsor"))}: ${spName}</div>` : ""}</div></div>
+        ${tr(r.description) ? `<p class="rw-desc">${esc(tr(r.description))}</p>` : ""}
+        ${r.claimCode ? won : need.join("")}${until}</div>`;
+    }).join("");
+    box.hidden = false;
+  }
+
+  // Lokacija preko GPS-a: dodatak, ne uslov. Odbijanje ili greška ne sprečava pečat.
+  function getGps(timeoutMs = 8000) {
+    return new Promise(resolve => {
+      if (!navigator.geolocation) return resolve({status: "unavailable"});
+      let done = false;
+      const finish = v => { if (!done) { done = true; resolve(v); } };
+      setTimeout(() => finish({status: "timeout"}), timeoutMs + 500);
+      navigator.geolocation.getCurrentPosition(
+        p => finish({status: "granted", lat: p.coords.latitude, lng: p.coords.longitude}),
+        e => finish({status: e.code === 1 ? "denied" : e.code === 3 ? "timeout" : "unavailable"}),
+        {enableHighAccuracy: true, timeout: timeoutMs, maximumAge: 60000}
+      );
+    });
+  }
+  let scanPending = false;
+  async function recordScan(code) {
+    const wantStamp = !!code && data.stampsEnabled !== false && here.stampEnabled !== false;
+    scanPending = wantStamp;
+    const gps = wantStamp ? await getGps() : {status: "not_requested"};
+    try {
+      const r = await fetch("/api/scan", {
+        method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({slug: here.id, k: code || null, device: deviceId(), gps})
+      });
+      scanResult = await r.json().catch(() => null);
+    } catch { scanResult = null; }
+    scanPending = false;
+    await loadPassport();
+  }
+  async function loadPassport() {
+    try {
+      const r = await fetch("/api/passport?device=" + encodeURIComponent(deviceId()), {cache: "no-store"});
+      if (r.ok) passportData = await r.json();
+    } catch {}
+    if (!$("passport").hidden || $("here").hidden === false) { renderPassport(); renderCards(); }
   }
 
   /* ---------- događaji ---------- */
@@ -331,13 +439,26 @@
   }
 
   async function init() {
-    [data, events] = await Promise.all([loadJSON("/data/locations.json"), loadJSON("/data/events.json").then(e => e?.events || [])]);
-    if (!data) { document.body.innerHTML = "<p style='padding:20px'>Podaci o lokacijama nisu dostupni. Pokušajte ponovo.</p>"; return; }
-    const pre = await loadJSON("/data/routes.json");
+    // tajni kod iz QR-a (?k=…): pročitaj ga i odmah ukloni iz adrese da se ne dijeli dalje
+    const params = new URLSearchParams(location.search);
+    const code = params.get("k");
+    if (code) { params.delete("k"); history.replaceState(null, "", location.pathname + (params.toString() ? "?" + params : "") + location.hash); }
+
+    // 1) baza preko /api/locations; 2) rezerva: statični JSON fajlovi
+    const [apiData, ev] = await Promise.all([loadJSON("/api/locations"), loadJSON("/data/events.json").then(e => e?.events || [])]);
+    events = ev;
+    let pre;
+    if (apiData && Array.isArray(apiData.locations) && apiData.locations.length) {
+      data = apiData; apiMode = true; pre = apiData.routes || {};
+    } else {
+      data = await loadJSON("/data/locations.json");
+      if (!data) { document.body.innerHTML = "<p style='padding:20px'>Podaci o lokacijama nisu dostupni. Pokušajte ponovo.</p>"; return; }
+      pre = await loadJSON("/data/routes.json");
+    }
     const id = currentId() || data.defaultId;
     here = data.locations.find(l => l.id === id) || data.locations.find(l => l.id === data.defaultId) || data.locations[0];
     others = data.locations.filter(l => l !== here);
-    addStamp(here.id);
+    if (apiMode) recordScan(code); else addStamp(here.id);
     applyStatic(); renderLangs();
 
     map = L.map("map", {zoomControl: false, attributionControl: true}).setView([here.lat, here.lng], 17);

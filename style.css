@@ -152,3 +152,16 @@ main{display:flex;flex-direction:column}
 .pin.is-here{transform:translate(-50%,-10px)}
 .pin-label{white-space:nowrap}
 [hidden]{display:none!important}
+
+/* „Saznaj više” – dio koji se otvara na klik */
+details.more{margin:4px 0 18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+details.more summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:48px;box-sizing:border-box}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--deep);border-bottom:2px solid var(--deep);transform:rotate(45deg);transition:transform .25s;margin-right:4px;flex:none}
+details.more[open] summary::after{transform:rotate(-135deg)}
+details.more[open] summary{border-bottom:1px solid var(--line)}
+.more-body{padding:6px 16px 14px}
+.more-body h4{font:700 18px/1.25 var(--f-display);margin:14px 0 6px}
+.more-body p{margin:0 0 10px}
+.more-src{font-size:13px;color:var(--muted);margin-top:12px;line-height:1.5}
+.more-src a{color:var(--deep)}

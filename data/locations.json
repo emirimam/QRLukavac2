@@ -4,7 +4,7 @@
   "locations": [
     {
       "id": "setaliste",
-      "_status": "Tekst: nacrt (izvori: bastina.ba, visitlukavac.ba); TZ da doda godinu uređenja šetališta i zanimljivost. Čeka fotografije i audio.",
+      "_status": "Tekst prema istraživanju (lukavac.ba, RTV Lukavac, SodaLIVE, Tuzlanski.ba, Bljesak, bastina.ba). Otvoreno: porijeklo naziva „Bremen”. Čeka fotografije (dozvola Grada/TZ) i audio.",
       "name": {
         "bs": "Lukavačko šetalište",
         "en": "Lukavac Promenade",
@@ -18,18 +18,18 @@
       "text": {
         "bs": [
           "Lukavac je jedan od rijetkih gradova u Bosni i Hercegovini koji je od samog početka građen po planu. Kada je 1893. godine počela izgradnja Fabrike sode, uz nju su nicale ulice, škola, trgovine, pekare, radničke kuće i činovničke vile, a već 1894. i željeznička stanica. Strani gosti su se čudili koliko je novo naselje uređeno, pa je Lukavac u ondašnjoj štampi prozvan „mali Beč”.",
-          "Šetalište je danas srce tog grada: popločana pješačka zona u samom centru, nadomak Trga slobode. Prate ga drvoredi u okruglim žardinjerama, klupe u hladu, gredice cvijeća i niz kafića i radnji u prizemljima zgrada.",
-          "Ovdje Lukavčani piju jutarnju kafu, šetaju predvečer i sastaju se s prijateljima. Sjednite na klupu ili u baštu nekog od kafića, a ostale tačke staze, s putem i udaljenošću do njih, vidite na mapi iznad."
+          "Šetalište je danas srce tog grada, a Lukavčani ga od milja zovu „Bremen plac”. Nekad je ovuda prolazio saobraćaj, pa se šetalo samo uvečer. Godine 2020. prostor je uređen u popločanu pješačku zonu s novom rasvjetom, drvoredima, klupama i cvijećem, a uz njega su 2024. uređene i zelene površine sa stazama i kućicama.",
+          "Ovdje Lukavčani piju jutarnju kafu, šetaju predvečer i sastaju se s prijateljima, a na šetalištu se slavi Dan Grada i održava „Zima u Lukavcu”. Sjednite na klupu ili u baštu nekog od kafića, a ostale tačke staze, s putem i udaljenošću do njih, vidite na mapi iznad."
         ],
         "en": [
           "Lukavac is one of the few towns in Bosnia and Herzegovina that was planned from the very start. When construction of the soda factory began in 1893, streets, a school, shops, bakeries, workers' houses and officials' villas grew up around it, followed by a railway station in 1894. Foreign visitors were so surprised by how orderly the new town was that the press of the time called Lukavac “Little Vienna”.",
-          "Today the promenade is the heart of the town: a paved pedestrian zone in the very centre, just by Freedom Square. It is lined with trees in round planters, shaded benches, flower beds and a row of cafés and shops on the ground floors.",
-          "This is where locals have their morning coffee, take an evening stroll and meet friends. Take a seat on a bench or at a café terrace; the other stops on the trail, with routes and distances, are on the map above."
+          "Today the promenade is the heart of the town; locals affectionately call it “Bremen plac”. Traffic used to run through here, so people only strolled in the evening. In 2020 the space was turned into a paved pedestrian zone with new lighting, trees, benches and flowers, and in 2024 the green areas next to it were landscaped with paths and kiosks.",
+          "This is where locals have their morning coffee, take an evening stroll and meet friends, and it is where the town celebrates City Day and hosts “Winter in Lukavac”. Take a seat on a bench or at a café terrace; the other stops on the trail, with routes and distances, are on the map above."
         ],
         "de": [
           "Lukavac ist eine der wenigen Städte in Bosnien und Herzegowina, die von Anfang an planmäßig angelegt wurden. Als 1893 der Bau der Sodafabrik begann, entstanden ringsum Straßen, eine Schule, Läden, Bäckereien, Arbeiterhäuser und Beamtenvillen, 1894 dann auch der Bahnhof. Ausländische Besucher staunten, wie geordnet die neue Siedlung war, und die damalige Presse nannte Lukavac „Klein-Wien”.",
-          "Heute ist die Promenade das Herz der Stadt: eine gepflasterte Fußgängerzone mitten im Zentrum, gleich beim Platz der Freiheit. Sie wird gesäumt von Bäumen in runden Pflanzkübeln, schattigen Bänken, Blumenbeeten und einer Reihe von Cafés und Geschäften in den Erdgeschossen.",
-          "Hier trinken die Einheimischen ihren Morgenkaffee, flanieren am Abend und treffen Freunde. Setzen Sie sich auf eine Bank oder auf eine Café-Terrasse; die anderen Stationen des Pfads mit Weg und Entfernung sehen Sie auf der Karte oben."
+          "Heute ist die Promenade das Herz der Stadt; die Einheimischen nennen sie liebevoll „Bremen plac”. Früher fuhr hier der Verkehr, flaniert wurde nur am Abend. 2020 wurde der Raum zu einer gepflasterten Fußgängerzone mit neuer Beleuchtung, Bäumen, Bänken und Blumen umgestaltet, 2024 kamen daneben begrünte Flächen mit Wegen und Holzhäuschen hinzu.",
+          "Hier trinken die Einheimischen ihren Morgenkaffee, flanieren am Abend und treffen Freunde; hier feiert die Stadt ihren Stadttag und veranstaltet den „Winter in Lukavac”. Setzen Sie sich auf eine Bank oder auf eine Café-Terrasse; die anderen Stationen des Pfads mit Weg und Entfernung sehen Sie auf der Karte oben."
         ]
       },
       "image": "",
@@ -40,7 +40,146 @@
       "lat": 44.53348921058252,
       "lng": 18.53414924746493,
       "mode": "foot",
-      "coordsVerified": true
+      "coordsVerified": true,
+      "more": {
+        "bs": {
+          "sections": [
+            {
+              "h": "Od večernjeg korza do pješačke zone",
+              "p": [
+                "Glavni gradski prostor se u Lukavcu odavno zove „Bremen plac”, odnosno Trg Bremena. Dok je ulicom prolazio saobraćaj, bio je korzo samo uvečer, kada bi se grad izašao prošetati.",
+                "O pravom šetalištu se pričalo godinama, a ideju je potvrdio i regulacioni plan centra grada. Pješačka zona je građena u fazama 2019. i 2020. godine: popločana je, dobila je novu rasvjetu, a u proljeće 2020. posađeno je sezonsko cvijeće. Nova rasvjeta svečano je upaljena 24. juna 2020. godine."
+              ]
+            },
+            {
+              "h": "Zelene površine uz šetalište",
+              "p": [
+                "Zapuštene zelene površine uz pješačku zonu uređene su i svečano otvorene 7. marta 2024. godine, uz podršku UNDP-a. Dobile su pješačke staze, klupe u hladu, rasvjetu, teren za djecu i drvene izložbeno-prodajne kućice, a otvorene su koncertom i druženjem."
+              ]
+            },
+            {
+              "h": "Zašto „Bremen”?",
+              "p": [
+                "Ni sami Lukavčani ne znaju sa sigurnošću odakle naziv „Bremen”. Ako znate priču iza imena, javite je Turističkoj zajednici Lukavac."
+              ]
+            },
+            {
+              "h": "Šta se ovdje dešava",
+              "p": [
+                "Dan Grada, 18. septembar, slavi se na šetalištu programom za djecu poslijepodne i koncertom navečer.",
+                "U decembru je šetalište domaćin manifestacije „Zima u Lukavcu”, s turističkim kućicama, ugostiteljskom ponudom i novogodišnjim koncertima.",
+                "Ljeti se ulica navečer zatvara za automobile, pa cijelo šetalište pripada pješacima."
+              ]
+            },
+            {
+              "h": "Šta slijedi",
+              "p": [
+                "Plan uređenja centra grada predviđa da šetalište jednog dana postane trajna gradska pješačka zona, uz novi manji gradski trg i veći gradski park."
+              ]
+            }
+          ]
+        },
+        "en": {
+          "sections": [
+            {
+              "h": "From evening korzo to pedestrian zone",
+              "p": [
+                "The town's main public space has long been known as “Bremen plac”, or Bremen Square. While traffic still ran through the street, it was a korzo only in the evening, when the town came out for a stroll.",
+                "A proper promenade was talked about for years and was confirmed by the town-centre regulation plan. The pedestrian zone was built in stages in 2019 and 2020: it was paved and given new lighting, and seasonal flowers were planted in spring 2020. The new lights were switched on in a small ceremony on 24 June 2020."
+              ]
+            },
+            {
+              "h": "Green spaces along the promenade",
+              "p": [
+                "The neglected green areas next to the pedestrian zone were landscaped and officially opened on 7 March 2024 with support from UNDP. They now have footpaths, shaded benches, lighting, a children's pitch and wooden exhibition-and-sales kiosks; the opening was celebrated with a concert."
+              ]
+            },
+            {
+              "h": "Why “Bremen”?",
+              "p": [
+                "Not even the locals know for sure where the name “Bremen” comes from. If you know the story behind it, let the Lukavac Tourist Board know."
+              ]
+            },
+            {
+              "h": "What's on",
+              "p": [
+                "City Day, 18 September, is celebrated here with an afternoon programme for children and an evening concert.",
+                "In December the promenade hosts “Winter in Lukavac”, with wooden stalls, food and drink and New Year concerts.",
+                "In summer the street is closed to cars in the evening, so the whole promenade belongs to pedestrians."
+              ]
+            },
+            {
+              "h": "What's next",
+              "p": [
+                "The town-centre plan foresees turning the promenade into a permanent pedestrian zone one day, with a new small town square and a larger city park."
+              ]
+            }
+          ]
+        },
+        "de": {
+          "sections": [
+            {
+              "h": "Vom Abendkorso zur Fußgängerzone",
+              "p": [
+                "Der wichtigste öffentliche Raum der Stadt heißt seit Langem „Bremen plac”, also Bremer Platz. Solange hier Autos fuhren, war er nur abends ein Korso, wenn die Stadt zum Flanieren ausging.",
+                "Über eine echte Promenade wurde jahrelang gesprochen, der Bebauungsplan für das Stadtzentrum sah sie vor. Die Fußgängerzone entstand in Etappen 2019 und 2020: Sie wurde gepflastert und neu beleuchtet, im Frühjahr 2020 wurden Saisonblumen gepflanzt. Die neue Beleuchtung wurde am 24. Juni 2020 feierlich eingeschaltet."
+              ]
+            },
+            {
+              "h": "Grünflächen an der Promenade",
+              "p": [
+                "Die verwilderten Grünflächen neben der Fußgängerzone wurden mit Unterstützung von UNDP neu gestaltet und am 7. März 2024 eröffnet. Es gibt Fußwege, schattige Bänke, Beleuchtung, einen Kinderspielplatz zum Fußballspielen und hölzerne Verkaufshäuschen; gefeiert wurde mit einem Konzert."
+              ]
+            },
+            {
+              "h": "Warum „Bremen”?",
+              "p": [
+                "Selbst die Einheimischen wissen nicht genau, woher der Name „Bremen” stammt. Wenn Sie die Geschichte kennen, erzählen Sie sie dem Tourismusverband Lukavac."
+              ]
+            },
+            {
+              "h": "Was hier los ist",
+              "p": [
+                "Der Stadttag am 18. September wird hier mit einem Kinderprogramm am Nachmittag und einem Konzert am Abend gefeiert.",
+                "Im Dezember findet auf der Promenade der „Winter in Lukavac” statt, mit Holzhäuschen, Gastronomie und Neujahrskonzerten.",
+                "Im Sommer ist die Straße abends für Autos gesperrt, dann gehört die ganze Promenade den Fußgängern."
+              ]
+            },
+            {
+              "h": "Was kommt",
+              "p": [
+                "Der Plan für das Stadtzentrum sieht vor, die Promenade eines Tages zur dauerhaften Fußgängerzone zu machen, mit einem neuen kleinen Stadtplatz und einem größeren Stadtpark."
+              ]
+            }
+          ]
+        }
+      },
+      "sources": [
+        {
+          "t": "lukavac.ba",
+          "u": "https://lukavac.ba/svecano-otvoren-gradski-park/"
+        },
+        {
+          "t": "RTV Lukavac",
+          "u": "https://rtvlukavac.ba/pokradene-sadnice-sezonskog-cvijeca-na-setalistu-u-lukavcu/"
+        },
+        {
+          "t": "SodaLIVE",
+          "u": "https://sodalive.ba/aktuelnosti/lukavac-grad/osvijetljeno-setaliste-u-lukavcu/"
+        },
+        {
+          "t": "Tuzlanski.ba",
+          "u": "https://tuzlanski.ba/vijesti/bih/investicija-vrijedna-vise-od-200-hiljada-km-lukavac-dobio-moderno-setaliste/506726"
+        },
+        {
+          "t": "Bljesak.info",
+          "u": "https://bljesak.info/magazin/putujte-s-nama/lukavac-bosansko-more-na-modracu-protiv-prasine-i-dima/310615"
+        },
+        {
+          "t": "bastina.ba",
+          "u": "https://bastina.ba/mali-bec-knjiga-o-demografskim-i-socijalnim-promjenama-u-lukavcu-na-razmedju-19-i-20-stoljeca"
+        }
+      ]
     },
     {
       "id": "trg-slobode",

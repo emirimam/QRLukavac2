@@ -17,7 +17,7 @@
       youAreHere: "Vi ste ovdje", audioStory: "Audio priča", audioSoon: "Audio priča uskoro.", thenNow: "Nekad i sad", then: "Nekad", now: "Danas",
       share: "Podijeli", whereNext: "Kuda dalje?", events: "Šta se dešava u Lukavcu", navigate: "Navigacija do ovdje", showRoute: "Prikaži put na mapi",
       passport: "Lukavac pasoš", stamps: (n, t) => `Pečat ${n} od ${t}`, allStamps: "Svi pečati su vaši!", visited: "posjećeno",
-      listen: "Poslušaj", pause: "Pauza", readMore: "Pročitaj više", foot: "pješice", car: "autom", approx: "približno",
+      listen: "Poslušaj", pause: "Pauza", readMore: "Pročitaj više", moreAbout: "Saznaj više o ovom mjestu", sources: "Izvori", foot: "pješice", car: "autom", approx: "približno",
       shareText: n => `${n} – digitalna info staza Lukavca`, close: "Zatvori"
     },
     en: {
@@ -25,7 +25,7 @@
       youAreHere: "You are here", audioStory: "Audio story", audioSoon: "Audio story coming soon.", thenNow: "Then and now", then: "Then", now: "Now",
       share: "Share", whereNext: "Where next?", events: "What's on in Lukavac", navigate: "Directions", showRoute: "Show route on map",
       passport: "Lukavac passport", stamps: (n, t) => `Stamp ${n} of ${t}`, allStamps: "You've collected every stamp!", visited: "visited",
-      listen: "Listen", pause: "Pause", readMore: "Read more", foot: "on foot", car: "by car", approx: "approx.",
+      listen: "Listen", pause: "Pause", readMore: "Read more", moreAbout: "Learn more about this place", sources: "Sources", foot: "on foot", car: "by car", approx: "approx.",
       shareText: n => `${n} – Lukavac digital info trail`, close: "Close"
     },
     de: {
@@ -33,7 +33,7 @@
       youAreHere: "Sie sind hier", audioStory: "Audio-Geschichte", audioSoon: "Audio-Geschichte folgt in Kürze.", thenNow: "Damals und heute", then: "Damals", now: "Heute",
       share: "Teilen", whereNext: "Wohin als Nächstes?", events: "Veranstaltungen in Lukavac", navigate: "Route starten", showRoute: "Weg auf der Karte zeigen",
       passport: "Lukavac-Pass", stamps: (n, t) => `Stempel ${n} von ${t}`, allStamps: "Sie haben alle Stempel!", visited: "besucht",
-      listen: "Anhören", pause: "Pause", readMore: "Mehr lesen", foot: "zu Fuß", car: "mit dem Auto", approx: "ca.",
+      listen: "Anhören", pause: "Pause", readMore: "Mehr lesen", moreAbout: "Mehr über diesen Ort", sources: "Quellen", foot: "zu Fuß", car: "mit dem Auto", approx: "ca.",
       shareText: n => `${n} – Digitaler Info-Pfad Lukavac`, close: "Schließen"
     }
   };
@@ -123,6 +123,15 @@
     img.onerror = () => img.hidden = true;
   }
   const paras = arr => (tr(arr) || []).map(p => `<p>${esc(p)}</p>`).join("");
+  // „Saznaj više”: dodatni dio koji se otvara na klik. Polje more = {bs: {sections: [{h, p: []}], sources: [{t, u}]}, en: …}
+  function setMore(el, loc) {
+    const m = tr(loc.more);
+    if (!m || !m.sections || !m.sections.length) { el.hidden = true; el.open = false; return; }
+    const secs = m.sections.map(s => `<h4>${esc(s.h)}</h4>${(s.p || []).map(p => `<p>${esc(p)}</p>`).join("")}`).join("");
+    const src = (loc.sources || []).length ? `<div class="more-src"><b>${esc(t("sources"))}:</b> ${loc.sources.map(s => `<a href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.t)}</a>`).join(" · ")}</div>` : "";
+    el.querySelector(".more-body").innerHTML = secs + src;
+    el.hidden = false;
+  }
 
   /* ---------- nekad i sad ---------- */
   function setupCompare(box, cmp, name) {
@@ -193,6 +202,7 @@
     $("sheetShort").textContent = tr(loc.short) || "";
     $("sheetMeta").textContent = r ? `${fmtDist(r.distance)} · ${fmtTime(r.duration, r.mode)}${r.approx ? " (" + t("approx") + ")" : ""}` : "";
     $("sheetText").innerHTML = paras(loc.text);
+    setMore($("sheetMore"), loc);
     setImage($("sheetImg"), loc.image, tr(loc.name));
     setAudio($("sheetAudio"), $("sheetAudioMissing"), audioFor(loc));
     const travel = loc.mode === "car" ? "driving" : "walking";
@@ -244,6 +254,7 @@
   function renderHere() {
     $("hereName").textContent = tr(here.name);
     $("hereText").innerHTML = paras(here.text);
+    setMore($("hereMore"), here);
     setImage($("hereImg"), here.image, tr(here.name));
     setAudio($("hereAudio"), $("hereAudioMissing"), audioFor(here));
     setupCompare($("hereCompare"), here.compare, tr(here.name));

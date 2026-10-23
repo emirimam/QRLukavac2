@@ -175,7 +175,7 @@
     },
     {
       "id": "modrac",
-      "_status": "Čeka dopunu teksta (plaže, staze, sadržaji), fotografije i audio od TZ. Koordinate: ciljati plažu/parking, ne sredinu jezera.",
+      "_status": "Koordinate potvrđene. Čeka dopunu teksta (plaže, staze, sadržaji), fotografije i audio od TZ.",
       "name": {
         "bs": "Jezero Modrac",
         "en": "Lake Modrac",
@@ -203,10 +203,10 @@
       "audio": {
         "bs": "audio/modrac.mp3"
       },
-      "lat": 44.5205,
-      "lng": 18.548,
+      "lat": 44.50545769620953,
+      "lng": 18.5051162750411,
       "mode": "car",
-      "coordsVerified": false
+      "coordsVerified": true
     }
   ],
   "passport": {

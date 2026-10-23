@@ -4,20 +4,32 @@
   "locations": [
     {
       "id": "setaliste",
-      "_status": "Čeka tekst, fotografije i audio od TZ.",
+      "_status": "Tekst: nacrt (izvori: bastina.ba, visitlukavac.ba); TZ da doda godinu uređenja šetališta i zanimljivost. Čeka fotografije i audio.",
       "name": {
         "bs": "Lukavačko šetalište",
         "en": "Lukavac Promenade",
         "de": "Promenade Lukavac"
       },
       "short": {
-        "bs": "Polazna tačka info staze.",
-        "en": "Starting point of the info trail.",
-        "de": "Ausgangspunkt des Info-Pfads."
+        "bs": "Popločano srce Lukavca: drvoredi, cvijeće i kafići u centru grada.",
+        "en": "The paved heart of Lukavac: tree-lined, full of flowers and cafés.",
+        "de": "Das gepflasterte Herz von Lukavac: Bäume, Blumen und Cafés im Stadtzentrum."
       },
       "text": {
         "bs": [
-          "TODO: tekst o šetalištu od Turističke zajednice Lukavac (2–3 kratka pasusa: šta je ovo mjesto, zanimljivost, šta vidjeti u blizini)."
+          "Lukavac je jedan od rijetkih gradova u Bosni i Hercegovini koji je od samog početka građen po planu. Kada je 1893. godine počela izgradnja Fabrike sode, uz nju su nicale ulice, škola, trgovine, pekare, radničke kuće i činovničke vile, a već 1894. i željeznička stanica. Strani gosti su se čudili koliko je novo naselje uređeno, pa je Lukavac u ondašnjoj štampi prozvan „mali Beč”.",
+          "Šetalište je danas srce tog grada: popločana pješačka zona u samom centru, nadomak Trga slobode. Prate ga drvoredi u okruglim žardinjerama, klupe u hladu, gredice cvijeća i niz kafića i radnji u prizemljima zgrada.",
+          "Ovdje Lukavčani piju jutarnju kafu, šetaju predvečer i sastaju se s prijateljima. Sjednite na klupu ili u bašču nekog od kafića, a ostale tačke staze, s putem i udaljenošću do njih, vidite na mapi iznad."
+        ],
+        "en": [
+          "Lukavac is one of the few towns in Bosnia and Herzegovina that was planned from the very start. When construction of the soda factory began in 1893, streets, a school, shops, bakeries, workers' houses and officials' villas grew up around it, followed by a railway station in 1894. Foreign visitors were so surprised by how orderly the new town was that the press of the time called Lukavac “Little Vienna”.",
+          "Today the promenade is the heart of the town: a paved pedestrian zone in the very centre, just by Freedom Square. It is lined with trees in round planters, shaded benches, flower beds and a row of cafés and shops on the ground floors.",
+          "This is where locals have their morning coffee, take an evening stroll and meet friends. Take a seat on a bench or at a café terrace; the other stops on the trail, with routes and distances, are on the map above."
+        ],
+        "de": [
+          "Lukavac ist eine der wenigen Städte in Bosnien und Herzegowina, die von Anfang an planmäßig angelegt wurden. Als 1893 der Bau der Sodafabrik begann, entstanden ringsum Straßen, eine Schule, Läden, Bäckereien, Arbeiterhäuser und Beamtenvillen, 1894 dann auch der Bahnhof. Ausländische Besucher staunten, wie geordnet die neue Siedlung war, und die damalige Presse nannte Lukavac „Klein-Wien”.",
+          "Heute ist die Promenade das Herz der Stadt: eine gepflasterte Fußgängerzone mitten im Zentrum, gleich beim Platz der Freiheit. Sie wird gesäumt von Bäumen in runden Pflanzkübeln, schattigen Bänken, Blumenbeeten und einer Reihe von Cafés und Geschäften in den Erdgeschossen.",
+          "Hier trinken die Einheimischen ihren Morgenkaffee, flanieren am Abend und treffen Freunde. Setzen Sie sich auf eine Bank oder auf eine Café-Terrasse; die anderen Stationen des Pfads mit Weg und Entfernung sehen Sie auf der Karte oben."
         ]
       },
       "image": "",

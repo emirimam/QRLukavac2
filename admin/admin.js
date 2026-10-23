@@ -27,6 +27,14 @@
     await enter(data.user);
   });
   $("logout").addEventListener("click", async () => { await db.auth.signOut(); showLogin("Odjavljeni ste."); });
+  $("changePw").addEventListener("click", async () => {
+    const p1 = prompt("Nova lozinka (najmanje 10 znakova):");
+    if (!p1) return;
+    if (p1.length < 10) { alert("Lozinka je prekratka."); return; }
+    if (prompt("Ponovite novu lozinku:") !== p1) { alert("Lozinke se ne podudaraju."); return; }
+    const {error} = await db.auth.updateUser({password: p1});
+    alert(error ? "Greška: " + error.message : "Lozinka je promijenjena.");
+  });
 
   async function enter(u) {
     user = u;

@@ -1,5 +1,28 @@
 -- Serverske funkcije: bilježenje skeniranja, dodjela pečata, nagrade, statistika.
--- record_scan i get_passport smije zvati SAMO service_role (Vercel funkcije /api/scan i /api/passport).
+-- record_scan i get_passport smije zvati SAMO service_role (Supabase Edge funkcija public-api).
+
+-- Tajna "so" za hashiranje anonimnog ID-a uređaja. Generiše se jednom, nikome nije čitljiva osim funkcijama.
+create schema if not exists private;
+revoke all on schema private from public, anon, authenticated;
+create table if not exists private.secrets (
+  id          int primary key default 1 check (id = 1),
+  device_salt text not null default encode(extensions.gen_random_bytes(32), 'hex')
+);
+insert into private.secrets (id) values (1) on conflict (id) do nothing;
+revoke all on private.secrets from public, anon, authenticated;
+
+-- Anonimni ID uređaja (nasumičan UUID iz preglednika) -> HMAC-SHA256. U tabelama se čuva samo hash.
+create or replace function public.device_hash(p_device text)
+returns text
+language sql
+stable
+security definer
+set search_path = public, extensions
+as $$
+  select case when p_device ~ '^[A-Za-z0-9-]{16,64}$'
+              then encode(extensions.hmac(p_device, (select device_salt from private.secrets where id = 1), 'sha256'), 'hex')
+         end;
+$$;
 
 -- Udaljenost u metrima (haversine)
 create or replace function public.distance_m(lat1 double precision, lng1 double precision,
@@ -7,6 +30,7 @@ create or replace function public.distance_m(lat1 double precision, lng1 double 
 returns double precision
 language sql
 immutable
+set search_path = public
 as $$
   select 2 * 6371000 * asin(sqrt(
     power(sin(radians(lat2 - lat1) / 2), 2) +
@@ -80,10 +104,10 @@ $$;
 -- Glavna funkcija za skeniranje.
 --   p_slug        slug lokacije iz adrese (/vila)
 --   p_code        kod iz ?k= (ili null)
---   p_device      HASH anonimnog ID-a uređaja (hashira Vercel funkcija sa tajnom soli)
+--   p_device_id   anonimni ID uređaja iz preglednika (u bazu ide samo njegov HMAC hash)
 --   p_gps_status  'granted' | 'denied' | 'unavailable' | 'timeout' | 'not_requested'
 --   p_lat, p_lng  koordinate (samo ako je GPS dozvoljen); ne spremaju se, čuva se samo udaljenost
-create or replace function public.record_scan(p_slug text, p_code text, p_device text,
+create or replace function public.record_scan(p_slug text, p_code text, p_device_id text,
                                               p_gps_status text, p_lat double precision, p_lng double precision)
 returns jsonb
 language plpgsql
@@ -102,8 +126,9 @@ declare
   v_gps_ok  boolean := false;
   v_new     uuid[];
   v_recent_invalid int;
+  p_device  text := public.device_hash(p_device_id);
 begin
-  if p_device is null or length(p_device) < 16 then
+  if p_device is null then
     return jsonb_build_object('ok', false, 'error', 'bad_device');
   end if;
 
@@ -182,7 +207,7 @@ end;
 $$;
 
 -- Pasoš uređaja: pečati, napredak prema nagradama i kodovi osvojenih nagrada.
-create or replace function public.get_passport(p_device text)
+create or replace function public.get_passport(p_device_id text)
 returns jsonb
 language plpgsql
 volatile
@@ -193,8 +218,9 @@ declare
   v_stamps jsonb;
   v_rewards jsonb;
   n int;
+  p_device text := public.device_hash(p_device_id);
 begin
-  if p_device is null or length(p_device) < 16 then
+  if p_device is null then
     return jsonb_build_object('stamps', '[]'::jsonb, 'rewards', '[]'::jsonb);
   end if;
   perform public.issue_rewards(p_device);
@@ -359,6 +385,7 @@ revoke execute on function public.record_scan(text, text, text, text, double pre
 revoke execute on function public.get_passport(text) from public, anon, authenticated;
 revoke execute on function public.issue_rewards(text) from public, anon, authenticated;
 revoke execute on function public.gen_claim_code() from public, anon, authenticated;
+revoke execute on function public.device_hash(text) from public, anon, authenticated;
 grant  execute on function public.record_scan(text, text, text, text, double precision, double precision) to service_role;
 grant  execute on function public.get_passport(text) to service_role;
 

@@ -1,5 +1,5 @@
 -- Lukavac Info: admin dashboard, lokacije iz baze, statistika skeniranja, tajni kodovi, pečati i nagrade.
--- Migracija je aditivna: samo pravi nove tabele/funkcije i ništa ne briše.
+-- Migracija je aditivna i ponovljiva: samo pravi nove tabele/funkcije/politike i ništa ne briše (nema DROP naredbi).
 
 create extension if not exists pgcrypto with schema extensions;
 
@@ -113,19 +113,16 @@ begin
   return new;
 end;
 $$;
-drop trigger if exists trg_locations_secret on public.locations;
-create trigger trg_locations_secret after insert on public.locations
+create or replace trigger trg_locations_secret after insert on public.locations
   for each row execute function public.locations_after_insert();
 
 create or replace function public.touch_updated_at()
-returns trigger language plpgsql as $$
+returns trigger language plpgsql set search_path = public as $$
 begin new.updated_at := now(); return new; end;
 $$;
-drop trigger if exists trg_locations_touch on public.locations;
-create trigger trg_locations_touch before update on public.locations
+create or replace trigger trg_locations_touch before update on public.locations
   for each row execute function public.touch_updated_at();
-drop trigger if exists trg_settings_touch on public.settings;
-create trigger trg_settings_touch before update on public.settings
+create or replace trigger trg_settings_touch before update on public.settings
   for each row execute function public.touch_updated_at();
 
 -- Regeneracija koda: stari kod odmah prestaje važiti.
@@ -146,7 +143,7 @@ begin
       on conflict (location_id) do update set code = excluded.code, rotated_at = now();
       return c;
     exception when unique_violation then
-      -- isti kod već postoji na drugoj lokaciji: pokušaj ponovo
+      null; -- isti kod već postoji na drugoj lokaciji: pokušaj ponovo
     end;
   end loop;
 end;
@@ -167,6 +164,7 @@ create table if not exists public.routes (
   updated_at timestamptz not null default now(),
   primary key (from_id, to_id)
 );
+create index if not exists routes_to_idx on public.routes (to_id);
 
 -- ---------------------------------------------------------------------------
 -- Statistika i pečati (bez ličnih podataka: samo hash anonimnog ID-a uređaja)
@@ -213,8 +211,7 @@ create table if not exists public.rewards (
   created_at            timestamptz not null default now(),
   updated_at            timestamptz not null default now()
 );
-drop trigger if exists trg_rewards_touch on public.rewards;
-create trigger trg_rewards_touch before update on public.rewards
+create or replace trigger trg_rewards_touch before update on public.rewards
   for each row execute function public.touch_updated_at();
 
 create table if not exists public.reward_claims (
@@ -227,10 +224,11 @@ create table if not exists public.reward_claims (
   redeemed_by uuid references auth.users(id) on delete set null,
   unique (reward_id, device_hash)
 );
+create index if not exists reward_claims_redeemed_by_idx on public.reward_claims (redeemed_by);
 
 -- ---------------------------------------------------------------------------
 -- RLS: javni (anon) klijent nema direktan pristup ničemu.
--- Javni sadržaj ide kroz Vercel funkcije (/api/*) sa service_role ključem;
+-- Javni sadržaj ide kroz Edge funkciju public-api (service_role), a Vercel /api/* je samo proxy;
 -- admin radi kroz Supabase Auth i politike is_admin().
 -- ---------------------------------------------------------------------------
 alter table public.admins           enable row level security;
@@ -250,38 +248,66 @@ revoke insert, update, delete on public.location_secrets, public.scans, public.s
 revoke insert, delete on public.reward_claims from authenticated;
 revoke insert, update, delete on public.admins from authenticated;
 
-drop policy if exists admins_self_read on public.admins;
-create policy admins_self_read on public.admins for select to authenticated using (user_id = auth.uid());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'admins' and policyname = 'admins_self_read') then
+    create policy admins_self_read on public.admins for select to authenticated using (user_id = (select auth.uid()));
+  end if;
+end $p$;
 
-drop policy if exists settings_admin on public.settings;
-create policy settings_admin on public.settings for all to authenticated using (public.is_admin()) with check (public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'settings' and policyname = 'settings_admin') then
+    create policy settings_admin on public.settings for all to authenticated using ((select public.is_admin())) with check ((select public.is_admin()));
+  end if;
+end $p$;
 
-drop policy if exists locations_admin on public.locations;
-create policy locations_admin on public.locations for all to authenticated using (public.is_admin()) with check (public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'locations' and policyname = 'locations_admin') then
+    create policy locations_admin on public.locations for all to authenticated using ((select public.is_admin())) with check ((select public.is_admin()));
+  end if;
+end $p$;
 
-drop policy if exists secrets_admin_read on public.location_secrets;
-create policy secrets_admin_read on public.location_secrets for select to authenticated using (public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'location_secrets' and policyname = 'secrets_admin_read') then
+    create policy secrets_admin_read on public.location_secrets for select to authenticated using ((select public.is_admin()));
+  end if;
+end $p$;
 
-drop policy if exists routes_admin on public.routes;
-create policy routes_admin on public.routes for all to authenticated using (public.is_admin()) with check (public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'routes' and policyname = 'routes_admin') then
+    create policy routes_admin on public.routes for all to authenticated using ((select public.is_admin())) with check ((select public.is_admin()));
+  end if;
+end $p$;
 
-drop policy if exists scans_admin_read on public.scans;
-create policy scans_admin_read on public.scans for select to authenticated using (public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'scans' and policyname = 'scans_admin_read') then
+    create policy scans_admin_read on public.scans for select to authenticated using ((select public.is_admin()));
+  end if;
+end $p$;
 
-drop policy if exists stamps_admin_read on public.stamps;
-create policy stamps_admin_read on public.stamps for select to authenticated using (public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'stamps' and policyname = 'stamps_admin_read') then
+    create policy stamps_admin_read on public.stamps for select to authenticated using ((select public.is_admin()));
+  end if;
+end $p$;
 
-drop policy if exists rewards_admin on public.rewards;
-create policy rewards_admin on public.rewards for all to authenticated using (public.is_admin()) with check (public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'rewards' and policyname = 'rewards_admin') then
+    create policy rewards_admin on public.rewards for all to authenticated using ((select public.is_admin())) with check ((select public.is_admin()));
+  end if;
+end $p$;
 
-drop policy if exists claims_admin_read on public.reward_claims;
-create policy claims_admin_read on public.reward_claims for select to authenticated using (public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'reward_claims' and policyname = 'claims_admin_read') then
+    create policy claims_admin_read on public.reward_claims for select to authenticated using ((select public.is_admin()));
+  end if;
+end $p$;
 
 -- Funkcije: zaključaj podrazumijevani EXECUTE za PUBLIC.
 revoke execute on function public.gen_secret_code(int) from public, anon, authenticated;
 revoke execute on function public.locations_after_insert() from public, anon, authenticated;
 revoke execute on function public.regenerate_location_code(uuid) from public, anon;
 grant  execute on function public.regenerate_location_code(uuid) to authenticated;
+revoke execute on function public.is_admin() from public, anon;
 grant  execute on function public.is_admin() to authenticated;
 
 -- ---------------------------------------------------------------------------
@@ -291,15 +317,27 @@ insert into storage.buckets (id, name, public)
 values ('media', 'media', true)
 on conflict (id) do nothing;
 
-drop policy if exists media_admin_insert on storage.objects;
-create policy media_admin_insert on storage.objects for insert to authenticated
-  with check (bucket_id = 'media' and public.is_admin());
-drop policy if exists media_admin_update on storage.objects;
-create policy media_admin_update on storage.objects for update to authenticated
-  using (bucket_id = 'media' and public.is_admin()) with check (bucket_id = 'media' and public.is_admin());
-drop policy if exists media_admin_delete on storage.objects;
-create policy media_admin_delete on storage.objects for delete to authenticated
-  using (bucket_id = 'media' and public.is_admin());
-drop policy if exists media_admin_select on storage.objects;
-create policy media_admin_select on storage.objects for select to authenticated
-  using (bucket_id = 'media' and public.is_admin());
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'media_admin_insert') then
+    create policy media_admin_insert on storage.objects for insert to authenticated
+  with check (bucket_id = 'media' and (select public.is_admin()));
+  end if;
+end $p$;
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'media_admin_update') then
+    create policy media_admin_update on storage.objects for update to authenticated
+  using (bucket_id = 'media' and (select public.is_admin())) with check (bucket_id = 'media' and (select public.is_admin()));
+  end if;
+end $p$;
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'media_admin_delete') then
+    create policy media_admin_delete on storage.objects for delete to authenticated
+  using (bucket_id = 'media' and (select public.is_admin()));
+  end if;
+end $p$;
+do $p$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'media_admin_select') then
+    create policy media_admin_select on storage.objects for select to authenticated
+  using (bucket_id = 'media' and (select public.is_admin()));
+  end if;
+end $p$;

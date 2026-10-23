@@ -23,38 +23,40 @@ Adresa: **`/admin`** (prijava emailom i lozinkom, Supabase Auth; pristup imaju s
 
 ### Kako rade kod, pečat i GPS
 
-- QR na tabli vodi na `/<slug>?k=<tajni kod>`. Kod je nasumičan (6 znakova), jedinstven po lokaciji, čuva se samo u tabeli `location_secrets` (čita je samo admin). Javni `/api/locations` ga ne vraća, a aplikacija ga odmah uklanja iz adrese.
-- Pri otvaranju stranica šalje `/api/scan` (Vercel funkcija sa service_role ključem) → SQL funkcija `record_scan` provjerava kod, bilježi skeniranje i dodjeljuje pečat **najviše jednom po uređaju i lokaciji**. Bez koda ili s pogrešnim kodom lokacija se normalno otvara, ali pečata nema. Više od 10 pogrešnih kodova po uređaju u sat vremena se odbija.
-- Uređaj je anonimni nasumični ID iz preglednika; u bazu ide samo njegov HMAC hash (`DEVICE_SALT`). Ne spremaju se IP, user-agent ni koordinate (samo udaljenost u metrima).
+- QR na tabli vodi na `/<slug>?k=<tajni kod>`. Kod je nasumičan (6 znakova), jedinstven po lokaciji, čuva se samo u tabeli `location_secrets` (čita je samo admin). Javni API ga ne vraća, a aplikacija ga odmah uklanja iz adrese.
+- Pri otvaranju stranica šalje `/api/scan` → Vercel funkcija prosljeđuje Supabase **Edge funkciji `public-api`** (jedina ima service_role pristup) → SQL funkcija `record_scan` provjerava kod, bilježi skeniranje i dodjeljuje pečat **najviše jednom po uređaju i lokaciji**. Bez koda ili s pogrešnim kodom lokacija se normalno otvara, ali pečata nema. Više od 10 pogrešnih kodova po uređaju u sat vremena se odbija.
+- Uređaj je anonimni nasumični ID iz preglednika; u bazu ide samo njegov HMAC-SHA256 hash (tajna „so” se generiše u bazi, u šemi `private`). Ne spremaju se IP, user-agent ni koordinate (samo udaljenost u metrima).
 - GPS je dodatak: ako turist dozvoli lokaciju i u krugu je radijusa (zadano 150 m), pečat je „GPS potvrđen”. Ako odbije, pečat se svejedno daje uz ispravan kod.
 - Kad uređaj ispuni uslov nagrade, server mu izda kod za preuzimanje koji turist vidi u pasošu.
+- Javni (anon/publishable) ključ ne može čitati nijednu tabelu ni pozvati `record_scan` direktno (RLS + oduzeta prava).
 
-### Postavljanje (jednom)
+### Postavljanje
 
-1. **Supabase projekat** (besplatni plan) → SQL Editor → pokrenuti redom fajlove iz `supabase/migrations/` (ili `supabase db push` uz Supabase CLI). Migracije samo dodaju tabele/funkcije; treća upisuje postojećih 6 lokacija iz `data/locations.json` i ne prepisuje ništa što već postoji.
-2. **Vercel → Settings → Environment Variables** (Production i Preview):
-   - `SUPABASE_URL` — npr. `https://xxxx.supabase.co`
-   - `SUPABASE_ANON_KEY` — anon/publishable ključ (javan, koristi ga admin stranica)
-   - `SUPABASE_SERVICE_ROLE_KEY` — service_role (legacy JWT) ili novi `sb_secret_…` ključ (**samo na serveru**, nikad u kodu)
-   - `DEVICE_SALT` — dug nasumičan tekst (npr. `openssl rand -hex 32`); ne mijenjati kasnije, inače se brojanje uređaja i pečata „resetuje”
-3. **Prvi admin**: Supabase → Authentication → Users → *Add user* (email + lozinka, „Auto confirm”). Zatim u SQL Editoru:
+Već urađeno (23. 10. 2026): Supabase projekat **lukavac-info** (`ioztrbnyzwvwosndmvkb`, org „Termini”, besplatni plan), migracije, 6 lokacija, Edge funkcija `public-api`, prvi admin `emirimamovice@gmail.com`, env varijable na Vercel projektu `lukavacv2`.
+
+Za novi/drugi projekat:
+1. Pokrenuti redom fajlove iz `supabase/migrations/` (SQL Editor ili `supabase db push`). Migracije su aditivne i mogu se pokrenuti više puta.
+2. Deploy Edge funkcije: `supabase functions deploy public-api --no-verify-jwt` (kod u `supabase/functions/public-api/`).
+3. Vercel → Environment Variables: `SUPABASE_URL` i `SUPABASE_ANON_KEY` (publishable/anon ključ). Service ključ na Vercelu **nije potreban**.
+4. Prvi admin: Supabase → Authentication → Users → *Add user* (email + lozinka, „Auto confirm”), pa:
    ```sql
    insert into public.admins (user_id, email)
    select id, email from auth.users where email = 'emirimamovice@gmail.com';
    ```
-   U Authentication → Sign In / Providers isključiti javnu registraciju (*Allow new users to sign up*), da niko drugi ne pravi račune.
-4. Redeploy na Vercelu, otvoriti `/admin`, u **Postavke** upisati javnu adresu sajta, u **Lokacije** kliknuti *Preračunaj rute*, pa odštampati nove QR table (stari QR bez koda ne daje pečat).
+5. U Authentication → Sign In / Providers isključiti *Allow new users to sign up* (čak i ako neko napravi račun, bez reda u `admins` ne vidi ništa).
+6. U `/admin`: Postavke → javna adresa sajta; Lokacije → *Preračunaj rute*; odštampati nove QR table (stari QR bez koda ne daje pečat). Lozinka se mijenja dugmetom **Lozinka** u zaglavlju.
 
 ### Struktura (novo)
 
 ```
-api/                  ← Vercel funkcije: locations, scan, passport, config (+ _lib.js)
-admin/                ← dashboard (index.html, admin.js, print.html …), biblioteke u admin/vendor/
-supabase/migrations/  ← šema, RLS, SQL funkcije, početni podaci
-scripts/seed-sql.mjs  ← ponovo generiše migraciju s lokacijama iz data/locations.json
+api/                       ← Vercel funkcije (proxy): locations, scan, passport, config
+admin/                     ← dashboard (index.html, admin.js, print.html …), biblioteke u admin/vendor/
+supabase/migrations/       ← šema, RLS, SQL funkcije, početni podaci
+supabase/functions/public-api/ ← Edge funkcija (provjera koda, pečati, pasoš, javni podaci)
+scripts/seed-sql.mjs       ← ponovo generiše migraciju s lokacijama iz data/locations.json
 ```
 
-Lokalno sa API-jem: `npx vercel dev` (uz env varijable u `.env.local`). `npm run dev` i dalje radi, ali bez API-ja (rezervni statični način).
+Lokalno sa API-jem: `npx vercel dev` (uz `SUPABASE_URL` i `SUPABASE_ANON_KEY` u `.env.local`). `npm run dev` i dalje radi, ali bez API-ja (rezervni statični način).
 
 ## Novo u v0.2
 

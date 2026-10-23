@@ -352,7 +352,7 @@
     renderHere();
 
     // 1) kratko na trenutnoj lokaciji, 2) zoom-out na sve lokacije sa rutama,
-    // 3) uvodna poruka se spušta na dno, 4) na tački „Vi ste ovdje” otvara se info sa audio pričom
+    // 3) uvodna poruka se spušta na dno, 4) ponovni zoom na trenutnu lokaciju, 5) na tački „Vi ste ovdje” otvara se info sa audio pričom
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     setTimeout(async () => {
       await routePromise;
@@ -364,7 +364,12 @@
         $("here").hidden = false;
         $("othersBox").hidden = false;
         $("about").hidden = false;
-        setTimeout(() => { $("intro").remove(); openHerePopup(); }, reduce ? 0 : 950);
+        setTimeout(() => $("intro").remove(), reduce ? 0 : 950);
+        // 4) nakon pregleda svih lokacija, ponovo zumiraj na mjesto gdje se posjetilac nalazi
+        setTimeout(() => {
+          map.flyTo([here.lat, here.lng], 16, {duration: reduce ? 0 : 2.4});
+          map.once("moveend", openHerePopup);
+        }, reduce ? 0 : 2200);
       }, reduce ? 0 : 2300);
     }, reduce ? 0 : 1400);
 

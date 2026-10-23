@@ -1,0 +1,155 @@
+{
+  "_napomena": "Koordinate su PRIBLIŽNE i moraju se provjeriti (Google Maps: desni klik na tačku -> kopiraj koordinate). Kad provjeriš lokaciju, postavi coordsVerified na true. Tekstovi se pišu po jezicima: bs, en, de. Ako prijevod fali, prikazuje se bosanski. Polje _status kaže šta još treba od TZ.",
+  "defaultId": "setaliste",
+  "locations": [
+    {
+      "id": "setaliste",
+      "_status": "Čeka tekst, fotografije i audio od TZ.",
+      "name": { "bs": "Lukavačko šetalište", "en": "Lukavac Promenade", "de": "Promenade Lukavac" },
+      "short": { "bs": "Polazna tačka info staze.", "en": "Starting point of the info trail.", "de": "Ausgangspunkt des Info-Pfads." },
+      "text": {
+        "bs": ["TODO: tekst o šetalištu od Turističke zajednice Lukavac (2–3 kratka pasusa: šta je ovo mjesto, zanimljivost, šta vidjeti u blizini)."]
+      },
+      "image": "",
+      "compare": null,
+      "audio": { "bs": "audio/setaliste.mp3" },
+      "lat": 44.5432,
+      "lng": 18.5248,
+      "mode": "foot",
+      "coordsVerified": false
+    },
+    {
+      "id": "vila",
+      "_status": "Tekst prema bastina.ba i visitlukavac.ba. 'Nekad' fotografiju zamijeniti arhivskom (Zavod za zaštitu naslijeđa TK). Treba saglasnost za postavljanje (nacionalni spomenik).",
+      "name": { "bs": "Vila Solvay", "en": "Villa Solvay", "de": "Villa Solvay" },
+      "short": {
+        "bs": "Nacionalni spomenik BiH iz 1912. godine.",
+        "en": "National Monument of Bosnia and Herzegovina, built in 1912.",
+        "de": "Nationaldenkmal von Bosnien und Herzegowina aus dem Jahr 1912."
+      },
+      "text": {
+        "bs": [
+          "Vila Solvay izgrađena je 1911–1912. godine, u vrijeme Austro-Ugarske. Prvobitno je bila zamišljena kao zdravstvena ustanova, a od 1920-ih u njoj je živio direktor tvornice Solvay, Fritz Müller. Zato je Lukavčani i danas zovu „Milerova vila”.",
+          "Fasada spaja secesijske ukrase sa elementima historicizma. Vila stoji u središtu velike zelene površine, a 2015. godine proglašena je nacionalnim spomenikom Bosne i Hercegovine."
+        ],
+        "en": [
+          "Villa Solvay was built in 1911–1912, during Austro-Hungarian rule. It was originally planned as a hospital for the soda factory; from the 1920s it was the home of the Solvay director, Fritz Müller, which is why locals still call it “Müller's Villa”.",
+          "Its façade combines Secession ornament with historicist details. The villa stands in the middle of a large green space and was declared a National Monument of Bosnia and Herzegovina in 2015."
+        ],
+        "de": [
+          "Die Villa Solvay wurde 1911–1912 in der österreichisch-ungarischen Zeit errichtet. Ursprünglich war sie als Krankenhaus der Sodafabrik geplant; ab den 1920er-Jahren wohnte hier der Solvay-Direktor Fritz Müller, weshalb sie im Volksmund bis heute „Müllers Villa” heißt.",
+          "Die Fassade verbindet Jugendstil-Ornamente mit Elementen des Historismus. Die Villa steht inmitten einer großen Grünfläche und wurde 2015 zum Nationaldenkmal von Bosnien und Herzegowina erklärt."
+        ]
+      },
+      "image": "images/vila.jpg",
+      "compare": { "then": "images/vila-ranije.jpg", "now": "images/vila-danas.jpg" },
+      "audio": { "bs": "audio/vila.mp3", "en": "audio/vila-en.mp3" },
+      "lat": 44.5398,
+      "lng": 18.5222,
+      "mode": "foot",
+      "coordsVerified": false
+    },
+    {
+      "id": "park",
+      "_status": "Tekst prema javnim izvorima; TZ da provjeri. Čeka fotografije i audio.",
+      "name": { "bs": "Gradski park", "en": "City Park", "de": "Stadtpark" },
+      "short": {
+        "bs": "Obnovljeni park uz pješačku zonu.",
+        "en": "Renovated park next to the pedestrian zone.",
+        "de": "Erneuerter Park an der Fußgängerzone."
+      },
+      "text": {
+        "bs": [
+          "Gradski park nalazi se uz pješačku zonu, u blizini autobuske stanice. Nekadašnja zapuštena livada uređena je u mjesto okupljanja svih generacija.",
+          "U parku su nove pješačke staze, klupe, rasvjeta i dječiji teren za fudbal, a tu su i izložbeno-prodajni kiosci i muzički paviljon."
+        ],
+        "en": [
+          "The City Park lies next to the pedestrian zone, close to the bus station. A once-neglected meadow has been turned into a meeting place for all generations.",
+          "It has new footpaths, benches, lighting and a children's football pitch, as well as exhibition and sales kiosks and a music pavilion."
+        ],
+        "de": [
+          "Der Stadtpark liegt an der Fußgängerzone, nahe dem Busbahnhof. Aus einer einst verwilderten Wiese ist ein Treffpunkt für alle Generationen geworden.",
+          "Es gibt neue Wege, Bänke, Beleuchtung und einen Kinderfußballplatz sowie Ausstellungs- und Verkaufskioske und einen Musikpavillon."
+        ]
+      },
+      "image": "",
+      "compare": null,
+      "audio": { "bs": "audio/park.mp3" },
+      "lat": 44.5417,
+      "lng": 18.5282,
+      "mode": "foot",
+      "coordsVerified": false
+    },
+    {
+      "id": "macan-marija",
+      "_status": "NACRT prema bastina.ba (Zavod za zaštitu naslijeđa TK). TZ da provjeri tekst i koordinate.",
+      "name": { "bs": "Spomenik Macan Marija", "en": "Macan Marija Memorial", "de": "Denkmal Macan Marija" },
+      "short": {
+        "bs": "Centralna spomen-kosturnica iz 1962., nacionalni spomenik BiH.",
+        "en": "Central memorial ossuary from 1962, National Monument of BiH.",
+        "de": "Zentrales Gedenkossarium von 1962, Nationaldenkmal von BiH."
+      },
+      "text": {
+        "bs": [
+          "Centralna spomen-kosturnica poginulim učesnicima NOR-a otvorena je 13. septembra 1962. godine, na Dan oslobođenja Lukavca. Autor je tuzlanski kipar Dragiša Trifković. Na vrhu bijelog obeliska visokog skoro deset metara stoji bronzana skulptura djevojke u haljini koju nosi vjetar, a na mermernim pločama upisana su imena 267 boraca.",
+          "Lukavčani skulpturu zovu „Macan Marija”, po djevojci koja je, prema predaji, poginula 1944. godine. Drugi u njoj vide simbol slobode. Spomenik je 2019. godine proglašen nacionalnim spomenikom Bosne i Hercegovine, a u blizini je i Stara željeznička stanica."
+        ],
+        "en": [
+          "The central memorial ossuary for fallen WWII partisans was opened on 13 September 1962, the anniversary of Lukavac's liberation. It is the work of Tuzla sculptor Dragiša Trifković. A bronze figure of a girl in a wind-blown dress stands on top of a white obelisk almost ten metres high; the marble plaques bear the names of 267 fighters.",
+          "Locals call the statue “Macan Marija”, after a girl who, according to local tradition, was killed in 1944; others see her as a symbol of freedom. The memorial was declared a National Monument of Bosnia and Herzegovina in 2019. The Old Railway Station is nearby."
+        ],
+        "de": [
+          "Das zentrale Gedenkossarium für die gefallenen Partisanen wurde am 13. September 1962, dem Jahrestag der Befreiung Lukavacs, eröffnet. Es stammt vom Bildhauer Dragiša Trifković aus Tuzla. Auf einem fast zehn Meter hohen weißen Obelisken steht die Bronzefigur eines Mädchens im wehenden Kleid; auf den Marmortafeln stehen die Namen von 267 Kämpfern.",
+          "Die Einheimischen nennen die Figur „Macan Marija”, nach einem Mädchen, das der Überlieferung nach 1944 ums Leben kam; andere sehen in ihr ein Symbol der Freiheit. Seit 2019 ist das Denkmal Nationaldenkmal von Bosnien und Herzegowina. In der Nähe liegt der Alte Bahnhof."
+        ]
+      },
+      "image": "",
+      "compare": null,
+      "audio": { "bs": "audio/macan-marija.mp3" },
+      "lat": 44.5452,
+      "lng": 18.5305,
+      "mode": "foot",
+      "coordsVerified": false
+    },
+    {
+      "id": "modrac",
+      "_status": "Čeka dopunu teksta (plaže, staze, sadržaji), fotografije i audio od TZ. Koordinate: ciljati plažu/parking, ne sredinu jezera.",
+      "name": { "bs": "Jezero Modrac", "en": "Lake Modrac", "de": "Modrac-See" },
+      "short": {
+        "bs": "Akumulaciono jezero na rijeci Spreči.",
+        "en": "Reservoir lake on the Spreča river.",
+        "de": "Stausee am Fluss Spreča."
+      },
+      "text": {
+        "bs": [
+          "Jezero Modrac je akumulaciono jezero na rijeci Spreči, omiljeno mjesto za šetnju i ribolov.",
+          "TODO: dopuniti tekst (plaže, staze, sadržaji)."
+        ],
+        "en": ["Lake Modrac is a reservoir on the Spreča river, popular for walks and fishing."],
+        "de": ["Der Modrac-See ist ein Stausee am Fluss Spreča, beliebt zum Spazieren und Angeln."]
+      },
+      "image": "",
+      "compare": null,
+      "audio": { "bs": "audio/modrac.mp3" },
+      "lat": 44.5205,
+      "lng": 18.5480,
+      "mode": "car",
+      "coordsVerified": false
+    }
+  ],
+  "passport": {
+    "reward": {
+      "bs": "TODO: nagrada kod partnera (npr. kafa gratis uz pokazan ekran).",
+      "en": "TODO: partner reward (e.g. a free coffee when you show this screen).",
+      "de": "TODO: Belohnung beim Partner (z. B. ein Kaffee gratis gegen Vorzeigen)."
+    }
+  },
+  "about": {
+    "title": { "bs": "Digitalna info staza Lukavca", "en": "Lukavac Digital Info Trail", "de": "Digitaler Info-Pfad Lukavac" },
+    "text": {
+      "bs": "Svaka info tačka ima svoj QR kod. Skenirajte ga i vidite gdje se nalazite, šta je u blizini i kako doći do sljedeće tačke. Projekat Turističke zajednice Lukavac.",
+      "en": "Every info point has its own QR code. Scan it to see where you are, what is nearby and how to reach the next point. A project of the Lukavac Tourist Board.",
+      "de": "Jeder Infopunkt hat einen eigenen QR-Code. Scannen Sie ihn, um zu sehen, wo Sie sind, was in der Nähe ist und wie Sie zum nächsten Punkt kommen. Ein Projekt des Tourismusverbands Lukavac."
+    }
+  }
+}

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vila Solvay · Lukavac Info</title>
+<meta name="theme-color" content="#123b34">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+  :root{--deep:#123b34;--here:#e4572e;--bg:#f6f4ef;--ink:#14231f;--muted:#5a6b66}
+  html,body{margin:0;height:100%;background:var(--deep);font-family:"Source Sans 3",system-ui,sans-serif;color:var(--ink);overflow:hidden}
+  #map{position:fixed;inset:0}
+  /* natpis faze leta: Europa → BiH → Lukavac */
+  .stage{position:fixed;left:0;right:0;top:calc(18px + env(safe-area-inset-top,0px));display:flex;justify-content:center;pointer-events:none;z-index:5}
+  .stage span{font:600 13px "Source Sans 3",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#fff;background:rgba(18,59,52,.82);padding:8px 16px;border-radius:999px;backdrop-filter:blur(6px);transition:opacity .5s,transform .5s}
+  .stage span.out{opacity:0;transform:translateY(-6px)}
+  .big{position:fixed;left:0;right:0;top:42%;text-align:center;pointer-events:none;z-index:4;font:700 clamp(44px,12vw,96px)/1 Fraunces,Georgia,serif;color:#fff;text-shadow:0 4px 30px rgba(0,0,0,.45);transition:opacity .7s,transform .7s}
+  .big.out{opacity:0;transform:scale(1.08)}
+  .skip{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:6;height:44px;padding:0 16px;border-radius:999px;border:0;background:rgba(255,255,255,.92);font:600 14px "Source Sans 3",sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+  /* pin */
+  .pin{position:relative;width:26px;height:26px}
+  .pin i{position:absolute;inset:0;border-radius:50%;background:var(--here);border:4px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+  .pin b{position:absolute;inset:-4px;border-radius:50%;box-shadow:0 0 0 0 rgba(228,87,46,.7);animation:pulse 1.8s infinite}
+  .pin.drop{animation:drop .7s cubic-bezier(.3,1.6,.5,1) both}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(228,87,46,.7)}70%{box-shadow:0 0 0 26px rgba(228,87,46,0)}100%{box-shadow:0 0 0 0 rgba(228,87,46,0)}}
+  @keyframes drop{from{transform:translateY(-60px);opacity:0}to{transform:none;opacity:1}}
+  /* kartica na kraju */
+  .card{position:fixed;left:12px;right:12px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:7;max-width:460px;margin:0 auto;background:var(--bg);border-radius:18px;padding:16px 18px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);transform:translateY(130%);transition:transform .7s cubic-bezier(.2,.9,.2,1)}
+  .card.in{transform:none}
+  .eyebrow{color:var(--here);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+  .card h1{font:700 30px/1.1 Fraunces,Georgia,serif;margin:4px 0 4px}
+  .card p{margin:0 0 14px;color:var(--muted);font-size:15.5px;line-height:1.45}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{height:46px;padding:0 18px;border-radius:999px;border:1px solid #ddd6c8;background:#fff;color:var(--ink);font:600 15px "Source Sans 3",sans-serif;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer}
+  .btn.primary{background:var(--deep);border-color:var(--deep);color:#fff}
+  .fade{position:fixed;inset:0;background:var(--deep);z-index:10;transition:opacity 1s;pointer-events:none}
+  .fade.out{opacity:0}
+  @media (prefers-reduced-motion:reduce){.pin b{animation:none}}
+</style>
+</head>
+<body>
+  <div id="map" aria-label="Mapa: let od Evrope do Lukavca"></div>
+  <div class="stage"><span id="stage">Europa</span></div>
+  <div class="big" id="big">Europa</div>
+  <button class="skip" id="skip" type="button">Preskoči ›</button>
+
+  <section class="card" id="card" aria-live="polite">
+    <div class="eyebrow">Vi ste ovdje</div>
+    <h1>Vila Solvay</h1>
+    <p>Lukavac · nacionalni spomenik BiH · 1911–1912. Bolnica Fabrike sode koja je postala direktorova vila.</p>
+    <div class="actions">
+      <a class="btn primary" id="go" href="/vila">Istraži lokaciju ›</a>
+      <button class="btn" id="replay" type="button">↺ Ponovi let</button>
+    </div>
+  </section>
+  <div class="fade" id="fade"></div>
+
+  <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+  <script>
+  (() => {
+    // Ciljna tačka: Vila Solvay, Lukavac
+    const TARGET = { lng: 18.530471067068724, lat: 44.528347317446894 };
+    const START = { center: [16, 46], zoom: innerWidth < 600 ? 1.35 : 2.1, pitch: 0, bearing: 0 };   // zemaljska kugla, Evropa u sredini
+    const END = { center: [TARGET.lng, TARGET.lat], zoom: 17.3, pitch: 58, bearing: -28 };
+
+    const $ = id => document.getElementById(id);
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Vektorska mapa bez ključa (OpenFreeMap), sa 3D zgradama. Rezerva: OSM rasterske pločice.
+    const VECTOR = "https://tiles.openfreemap.org/styles/liberty";
+    const RASTER = {
+      version: 8,
+      sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 19,
+        attribution: "© OpenStreetMap" } },
+      layers: [{ id: "bg", type: "background", paint: { "background-color": "#dfe7e2" } }, { id: "osm", type: "raster", source: "osm" }]
+    };
+
+    const map = new maplibregl.Map({
+      container: "map", style: VECTOR, ...START,
+      attributionControl: { compact: true }, interactive: true, maxPitch: 70
+    });
+    let fellBack = false;
+    map.on("error", e => {
+      if (!fellBack && e && e.error && String(e.error.message || "").match(/style|fetch|Failed/i) && !map.isStyleLoaded()) {
+        fellBack = true; map.setStyle(RASTER);
+      }
+    });
+
+    // natpisi po fazi leta
+    const PHASES = [[0, "Europa"], [5.0, "Bosna i Hercegovina"], [10.5, "Lukavac"]];
+    let shown = "";
+    function phase(z) {
+      let name = PHASES[0][1];
+      for (const [minZ, n] of PHASES) if (z >= minZ) name = n;
+      if (name === shown) return;
+      shown = name;
+      const s = $("stage"); s.classList.add("out");
+      setTimeout(() => { s.textContent = name; s.classList.remove("out"); }, 250);
+      const big = $("big"); big.classList.add("out");
+      setTimeout(() => { big.textContent = name; big.classList.toggle("out", z >= 14); }, 350);
+    }
+    map.on("move", () => phase(map.getZoom()));
+
+    // zemaljska kugla (globe) sa atmosferom: besplatno, bez ključa
+    function addGlobe() {
+      try { map.setProjection({ type: "globe" }); } catch {}
+      try { map.setSky({ "sky-color": "#7fb2d9", "horizon-color": "#d9e8f2", "fog-color": "#e9eef0", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.6, "fog-ground-blend": 0.4, "atmosphere-blend": ["interpolate", ["linear"], ["zoom"], 0, 1, 8, 0.4, 12, 0] }); } catch {}
+    }
+    // 3D zgrade ako ih stil ima
+    function add3D() {
+      const st = map.getStyle(); if (!st || !st.sources) return;
+      const src = Object.keys(st.sources).find(k => st.sources[k].type === "vector");
+      if (!src || map.getLayer("3d-zgrade")) return;
+      try {
+        map.addLayer({ id: "3d-zgrade", type: "fill-extrusion", source: src, "source-layer": "building", minzoom: 14.5,
+          paint: { "fill-extrusion-color": "#e6ded0", "fill-extrusion-height": ["coalesce", ["get", "render_height"], 8],
+                   "fill-extrusion-base": ["coalesce", ["get", "render_min_height"], 0], "fill-extrusion-opacity": 0.85 } });
+      } catch {}
+    }
+
+    let marker, done = false, timer;
+    function finish() {
+      if (done) return; done = true;
+      clearTimeout(timer);
+      $("skip").hidden = true;
+      $("big").classList.add("out");
+      if (!marker) {
+        const el = document.createElement("div");   // MapLibre pomjera ovaj element; animira se unutrašnji
+        el.innerHTML = '<div class="pin drop"><b></b><i></i></div>';
+        marker = new maplibregl.Marker({ element: el, anchor: "center" }).setLngLat([TARGET.lng, TARGET.lat]).addTo(map);
+      }
+      setTimeout(() => $("card").classList.add("in"), 350);
+      // polako kruženje oko vile dok korisnik čita
+      if (!reduce) orbit();
+    }
+    let orbiting = false;
+    const orbitStep = () => { if (orbiting) map.rotateTo(map.getBearing() + 12, { duration: 6000, easing: t => t }); };
+    map.on("moveend", () => { if (orbiting) orbitStep(); });
+    ["mousedown", "touchstart", "wheel"].forEach(ev => map.getCanvasContainer().addEventListener(ev, () => { orbiting = false; }));
+    function orbit() { orbiting = true; orbitStep(); }
+
+    // Let u tri etape, da se jasno vidi Evropa → BiH → Lukavac → Vila
+    const LEGS = [
+      { center: [17.9, 44.2], zoom: 6.6, pitch: 0, bearing: 0, duration: 4200 },                 // Bosna i Hercegovina
+      { center: [18.53, 44.54], zoom: 12.6, pitch: 30, bearing: -10, duration: 3400 },            // Lukavac
+      { ...END, duration: 3400 }                                                                  // Vila Solvay
+    ];
+    const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    let run = 0;
+    function leg(i, token) {
+      if (token !== run) return;
+      if (i >= LEGS.length) { finish(); return; }
+      map.once("moveend", () => leg(i + 1, token));
+      map.flyTo({ ...LEGS[i], curve: 1.3, easing: ease, essential: true });
+    }
+    function fly() {
+      const token = ++run;
+      done = false; orbiting = false; $("card").classList.remove("in"); $("skip").hidden = false;
+      map.stop(); map.jumpTo(START); shown = ""; phase(START.zoom);
+      $("big").classList.remove("out");
+      if (reduce) { map.jumpTo(END); finish(); return; }
+      setTimeout(() => leg(0, token), 1300);
+    }
+
+    map.on("load", () => {
+      add3D();
+      $("fade").classList.add("out");
+      fly();
+    });
+    map.on("styledata", add3D);
+    map.on("style.load", addGlobe);
+    // ako se mapa ne učita (bez interneta), ipak prikaži karticu
+    setTimeout(() => { if (!map.loaded()) { $("fade").classList.add("out"); finish(); } }, 12000);
+
+    $("skip").addEventListener("click", () => { run++; map.stop(); map.jumpTo(END); finish(); });
+    $("replay").addEventListener("click", fly);
+  })();
+  </script>
+</body>
+</html>

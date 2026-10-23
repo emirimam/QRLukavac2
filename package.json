@@ -1,0 +1,15 @@
+{
+  "name": "lukavac-info",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Digitalna info staza Lukavca: QR info tačke sa mapom, rutama i audio vodičem",
+  "scripts": {
+    "dev": "npx serve .",
+    "routes": "node scripts/build-routes.mjs",
+    "qr": "node scripts/make-qr.mjs"
+  },
+  "devDependencies": {
+    "qrcode": "1.5.4"
+  }
+}

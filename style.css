@@ -1,0 +1,140 @@
+:root{
+  --ink:#14231f; --muted:#5a6b66; --bg:#f6f4ef; --surface:#ffffff; --line:#e1ddd3;
+  --deep:#123b34; --green:#1f8a5b; --blue:#2563eb; --here:#e4572e;
+  --f-display:"Fraunces", Georgia, serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--f-body);-webkit-font-smoothing:antialiased}
+main{display:flex;flex-direction:column}
+
+/* MAPA */
+.map-wrap{position:relative;height:62vh;min-height:360px}
+#map{position:absolute;inset:0;background:#dfe7e2}
+.leaflet-container{font-family:var(--f-body)}
+
+/* INTRO koji se spušta */
+.intro{
+  position:absolute;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top,0px));z-index:500;
+  background:var(--deep);color:#fff;border-radius:14px;padding:14px 16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+  transition:transform .9s cubic-bezier(.5,0,.2,1), opacity .9s;
+}
+.intro.drop{transform:translateY(70vh);opacity:0}
+.intro-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.intro-title{font:600 20px/1.25 var(--f-display);margin:2px 0 4px}
+.intro-hint{font-size:15px;opacity:.85}
+
+/* LEGENDA */
+.legend{position:absolute;right:10px;bottom:22px;z-index:500;background:rgba(255,255,255,.94);border-radius:10px;padding:6px 10px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.15);display:grid;gap:2px}
+.legend span{display:inline-block;width:18px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+/* MARKERI */
+.pin{display:flex;flex-direction:column;align-items:center;transform:translateY(-6px)}
+.pin-dot{width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.pin-label{margin-top:3px;background:#fff;color:var(--ink);font:600 12px/1 var(--f-body);padding:4px 7px;border-radius:6px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.pin.here .pin-dot{background:var(--here);width:20px;height:20px;animation:pulse 2s infinite}
+.pin.here .pin-label{background:var(--here);color:#fff}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(228,87,46,.6)}70%{box-shadow:0 0 0 16px rgba(228,87,46,0)}100%{box-shadow:0 0 0 0 rgba(228,87,46,0)}}
+
+/* TRENUTNA LOKACIJA */
+.here{padding:22px max(18px,env(safe-area-inset-left,0px)) 8px;max-width:720px;width:100%;margin:0 auto;animation:rise .7s ease both}
+.here-eyebrow{color:var(--here);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+.here h1{font:700 30px/1.15 var(--f-display);margin:4px 0 14px;text-wrap:balance}
+.here img,.sheet img{width:100%;border-radius:12px;margin-bottom:12px;aspect-ratio:16/10;object-fit:cover}
+.text p{margin:0 0 12px}
+.audio{margin:6px 0 16px}
+.audio audio{width:100%}
+.audio-missing{font-size:14px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:10px 12px}
+
+/* OSTALE LOKACIJE */
+.others{padding:8px max(18px,env(safe-area-inset-left,0px)) 24px;max-width:720px;width:100%;margin:0 auto}
+.others h2,.about h2{font:700 22px/1.2 var(--f-display);margin:10px 0 12px}
+.cards{display:grid;gap:10px}
+.card{display:grid;grid-template-columns:6px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 0;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%;overflow:hidden}
+.card:hover,.card:focus-visible{border-color:var(--deep);outline:none}
+.card .bar{align-self:stretch;border-radius:0 4px 4px 0}
+.card-name{font-weight:600}
+.card-short{font-size:14px;color:var(--muted)}
+.card-dist{font-size:14px;color:var(--muted);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* INTRO NA DNU */
+.about{background:var(--deep);color:#e8f1ee;padding:26px max(18px,env(safe-area-inset-left,0px)) calc(30px + env(safe-area-inset-bottom,0px));margin-top:12px;animation:rise .9s ease both}
+.about > *{max-width:720px;margin-left:auto;margin-right:auto}
+.about h2{color:#fff}
+.about a{color:#a8e0cf}
+.credits{font-size:13px;opacity:.7}
+
+/* DONJI LIST SA DETALJIMA */
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:1000;max-height:78vh;overflow:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.25);padding:18px max(18px,env(safe-area-inset-left,0px)) calc(18px + env(safe-area-inset-bottom,0px));animation:sheetUp .35s ease both}
+@media (min-width:760px){.sheet{left:auto;right:20px;bottom:20px;width:420px;border-radius:16px}}
+.sheet h3{font:700 24px/1.2 var(--f-display);margin:2px 40px 8px 0}
+.sheet-meta{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sheet-short{font-weight:600;margin:0 0 8px}
+.sheet-close{position:absolute;top:10px;right:12px;width:36px;height:36px;border-radius:50%;border:0;background:var(--bg);font-size:22px;cursor:pointer}
+.sheet-actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:600 15px var(--f-body);padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;cursor:pointer}
+.btn.primary{background:var(--deep);border-color:var(--deep);color:#fff}
+
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== dorada v0.2 ===== */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* JEZICI */
+.langs{position:absolute;right:10px;top:calc(10px + env(safe-area-inset-top,0px));z-index:600;display:flex;gap:4px;background:rgba(255,255,255,.94);border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.langs button{min-width:40px;height:34px;border:0;border-radius:999px;background:transparent;font:600 13px var(--f-body);color:var(--ink);cursor:pointer}
+.langs button.on{background:var(--deep);color:#fff}
+.intro{right:150px}
+@media (max-width:420px){.intro{right:12px;top:calc(56px + env(safe-area-inset-top,0px))}}
+
+/* INFO NA TAČKI „VI STE OVDJE” */
+.here-popup .leaflet-popup-content-wrapper{border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.here-popup .leaflet-popup-content{margin:12px 14px;font-family:var(--f-body)}
+.hp-eyebrow{color:var(--here);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.hp-name{font:700 18px/1.2 var(--f-display);color:var(--ink);margin:2px 0 3px}
+.hp-short{font-size:13.5px;line-height:1.4;color:var(--muted)}
+.hp-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.hp-btn{font:600 13px var(--f-body);height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.hp-btn.play{background:var(--here);border-color:var(--here);color:#fff}
+
+.audio-label{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px}
+
+/* NEKAD I SAD */
+.compare{margin:10px 0 18px}
+.compare h2{font:700 22px/1.2 var(--f-display);margin:6px 0 10px}
+.compare-box{--pos:50%;position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#ddd}
+.compare-box img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;margin:0;border-radius:0}
+.cmp-then-wrap{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.cmp-then{filter:sepia(.55) contrast(1.05)}
+.cmp-handle{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;margin-left:-1.5px;background:#fff;box-shadow:0 0 6px rgba(0,0,0,.4)}
+.cmp-tag{position:absolute;top:10px;font:600 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(20,35,31,.72);padding:4px 8px;border-radius:6px}
+.cmp-tag.left{left:10px}.cmp-tag.right{right:10px}
+.cmp-range input{width:100%;height:32px;accent-color:var(--here);margin-top:6px}
+
+.btn.share{display:inline-flex;align-items:center;gap:8px;margin:4px 0 6px}
+
+/* PASOŠ */
+.passport{max-width:720px;width:calc(100% - 36px);margin:14px auto 6px;background:var(--surface);border:2px dashed #d9a58f;border-radius:14px;padding:14px 16px;animation:rise .8s ease both}
+.passport-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.passport-eyebrow{color:var(--here);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.passport-count{font:700 20px/1.2 var(--f-display)}
+.stamp{flex:none;width:70px;height:70px;border-radius:50%;border:3px solid var(--here);color:var(--here);display:flex;align-items:center;justify-content:center;text-align:center;font:600 10.5px/1.1 var(--f-body);text-transform:uppercase;padding:6px;transform:rotate(-12deg)}
+.passport-dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pdot{font-size:12.5px;padding:4px 9px;border-radius:999px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.pdot.on{background:var(--deep);color:#fff;border-color:var(--deep)}
+.passport-reward{margin:10px 0 0;font-size:14.5px;color:var(--ink)}
+.seen{font-size:12px;font-weight:600;color:var(--green);margin-left:4px;white-space:nowrap}
+
+/* DOGAĐAJI */
+.events{padding:4px max(18px,env(safe-area-inset-left,0px)) 18px;max-width:720px;width:100%;margin:0 auto}
+.events h2{font:700 22px/1.2 var(--f-display);margin:10px 0 12px}
+.event-list{display:grid;gap:8px}
+.event{display:grid;grid-template-columns:54px 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:inherit;text-decoration:none}
+.ev-date{display:flex;flex-direction:column;align-items:center;font-size:12px;text-transform:uppercase;color:var(--here);line-height:1.1}
+.ev-date b{font:700 22px/1 var(--f-display);color:var(--ink)}
+.ev-title{display:block;font-weight:600}
+.ev-meta{display:block;font-size:13.5px;color:var(--muted)}

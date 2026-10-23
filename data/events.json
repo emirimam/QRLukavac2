@@ -1,0 +1,4 @@
+{
+  "_napomena": "Događaji u Lukavcu. Prikazuju se samo budući (od danas), najviše 4, sortirani po datumu. Primjer jednog unosa: { \"date\": \"2026-11-07\", \"time\": \"19:00\", \"title\": { \"bs\": \"Koncert u parku\", \"en\": \"Concert in the park\" }, \"place\": { \"bs\": \"Gradski park\" }, \"link\": \"https://...\" }. Polja time, place i link nisu obavezna.",
+  "events": []
+}

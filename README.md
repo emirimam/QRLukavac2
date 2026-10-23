@@ -1,6 +1,6 @@
 # Lukavac Info (v0.2)
 
-Digitalna info staza Lukavca. Svaka info tačka ima QR kod sa svojom adresom (`/setaliste`, `/vila`, `/park`…; radi i stari oblik `?l=vila`). Skeniranjem se otvara stranica koja:
+Digitalna info staza Lukavca. Svaka info tačka ima QR kod sa svojom adresom (`/setaliste`, `/trg-slobode`, `/vila`…; radi i stari oblik `?l=vila`). Skeniranjem se otvara stranica koja:
 
 1. pokaže mapu na mjestu gdje je posjetilac,
 2. odzumira da se vide sve ostale lokacije, sa zelenim i plavim putevima do njih,
@@ -40,7 +40,7 @@ scripts/              ← rute i QR kodovi
 Svako tekstualno polje može biti običan tekst ili objekat po jezicima:
 
 ```json
-"name": { "bs": "Gradski park", "en": "City Park", "de": "Stadtpark" }
+"name": { "bs": "Trg slobode", "en": "Freedom Square", "de": "Platz der Freiheit" }
 ```
 
 Ako prijevod nedostaje, prikazuje se bosanski. Polje `_status` kod svake lokacije kaže šta još treba od TZ.
@@ -49,7 +49,7 @@ Audio: `"audio": { "bs": "audio/vila.mp3", "en": "audio/vila-en.mp3" }`. Ko ima 
 
 ## Prvi koraci
 
-1. **Provjeri koordinate** u `data/locations.json`. Trenutne su PRIBLIŽNE. U Google Maps desni klik na tačno mjesto → klik na koordinate (kopira ih) → upiši `lat` i `lng` → `"coordsVerified": true`. Za Jezero Modrac ciljati plažu ili parking, ne sredinu jezera.
+1. **Provjeri koordinate** u `data/locations.json`. Sve lokacije su sada provjerene. Za novu lokaciju: u Google Maps desni klik na tačno mjesto → klik na koordinate (kopira ih) → upiši `lat` i `lng` → `"coordsVerified": true`. Za Jezero Modrac ciljati plažu ili parking, ne sredinu jezera.
 2. **Upiši tekstove** (sva polja sa `TODO`) i nagradu za pasoš.
 3. **Izračunaj rute:** `npm run routes` (traje oko pola minute, treba internet).
 4. **Lokalno testiranje:** `npm run dev`, pa otvori `http://localhost:3000/vila`.

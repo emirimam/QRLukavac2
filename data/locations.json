@@ -100,43 +100,6 @@
       "coordsVerified": true
     },
     {
-      "id": "park",
-      "_status": "Koordinate nisu potvrđene (Park „Obdanište” kod autobuske stanice?). Tekst prema javnim izvorima; TZ da provjeri. Čeka fotografije i audio.",
-      "name": {
-        "bs": "Gradski park",
-        "en": "City Park",
-        "de": "Stadtpark"
-      },
-      "short": {
-        "bs": "Obnovljeni park uz pješačku zonu.",
-        "en": "Renovated park next to the pedestrian zone.",
-        "de": "Erneuerter Park an der Fußgängerzone."
-      },
-      "text": {
-        "bs": [
-          "Gradski park nalazi se uz pješačku zonu, u blizini autobuske stanice. Nekadašnja zapuštena livada uređena je u mjesto okupljanja svih generacija.",
-          "U parku su nove pješačke staze, klupe, rasvjeta i dječiji teren za fudbal, a tu su i izložbeno-prodajni kiosci i muzički paviljon."
-        ],
-        "en": [
-          "The City Park lies next to the pedestrian zone, close to the bus station. A once-neglected meadow has been turned into a meeting place for all generations.",
-          "It has new footpaths, benches, lighting and a children's football pitch, as well as exhibition and sales kiosks and a music pavilion."
-        ],
-        "de": [
-          "Der Stadtpark liegt an der Fußgängerzone, nahe dem Busbahnhof. Aus einer einst verwilderten Wiese ist ein Treffpunkt für alle Generationen geworden.",
-          "Es gibt neue Wege, Bänke, Beleuchtung und einen Kinderfußballplatz sowie Ausstellungs- und Verkaufskioske und einen Musikpavillon."
-        ]
-      },
-      "image": "",
-      "compare": null,
-      "audio": {
-        "bs": "audio/park.mp3"
-      },
-      "lat": 44.5417,
-      "lng": 18.5282,
-      "mode": "foot",
-      "coordsVerified": false
-    },
-    {
       "id": "macan-marija",
       "_status": "NACRT prema bastina.ba (Zavod za zaštitu naslijeđa TK). TZ da provjeri tekst i koordinate.",
       "name": {
@@ -170,6 +133,34 @@
       },
       "lat": 44.531584487724224,
       "lng": 18.528038296924972,
+      "mode": "foot",
+      "coordsVerified": true
+    },
+    {
+      "id": "srebrenica",
+      "_status": "Koordinate potvrđene. Čeka tekst (kada je podignuto, autor, značenje), fotografije i audio od TZ.",
+      "name": {
+        "bs": "Spomen-obilježje žrtvama genocida u Srebrenici",
+        "en": "Memorial to the Victims of the Srebrenica Genocide",
+        "de": "Gedenkstätte für die Opfer des Völkermords von Srebrenica"
+      },
+      "short": {
+        "bs": "Mjesto sjećanja na žrtve genocida u Srebrenici 1995.",
+        "en": "A place of remembrance for the victims of the 1995 Srebrenica genocide.",
+        "de": "Ein Ort des Gedenkens an die Opfer des Völkermords von Srebrenica 1995."
+      },
+      "text": {
+        "bs": [
+          "TODO: tekst o spomen-obilježju od Turističke zajednice Lukavac (kada je podignuto, autor, značenje)."
+        ]
+      },
+      "image": "",
+      "compare": null,
+      "audio": {
+        "bs": "audio/srebrenica.mp3"
+      },
+      "lat": 44.530937090189994,
+      "lng": 18.533825576294138,
       "mode": "foot",
       "coordsVerified": true
     },

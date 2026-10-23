@@ -34,8 +34,8 @@ main{display:flex;flex-direction:column}
 .pin{display:flex;flex-direction:column;align-items:center;transform:translateY(-6px)}
 .pin-dot{width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .pin-label{margin-top:3px;background:#fff;color:var(--ink);font:600 12px/1 var(--f-body);padding:4px 7px;border-radius:6px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.25)}
-.pin.here .pin-dot{background:var(--here);width:20px;height:20px;animation:pulse 2s infinite}
-.pin.here .pin-label{background:var(--here);color:#fff}
+.pin.is-here .pin-dot{background:var(--here);width:20px;height:20px;animation:pulse 2s infinite}
+.pin.is-here .pin-label{background:var(--here);color:#fff}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(228,87,46,.6)}70%{box-shadow:0 0 0 16px rgba(228,87,46,0)}100%{box-shadow:0 0 0 0 rgba(228,87,46,0)}}
 
 /* TRENUTNA LOKACIJA */
@@ -138,3 +138,17 @@ main{display:flex;flex-direction:column}
 .ev-date b{font:700 22px/1 var(--f-display);color:var(--ink)}
 .ev-title{display:block;font-weight:600}
 .ev-meta{display:block;font-size:13.5px;color:var(--muted)}
+
+/* ===== svijetleće plave rute ===== */
+.leaflet-overlay-pane path.route-glow{filter:blur(5px)}
+.leaflet-overlay-pane path.route-core{filter:drop-shadow(0 0 3px rgba(79,155,255,.95)) drop-shadow(0 0 8px rgba(47,123,255,.7))}
+.leaflet-overlay-pane path.route-flow{filter:drop-shadow(0 0 4px #fff);animation:routeFlow 1.6s linear infinite}
+@keyframes routeFlow{to{stroke-dashoffset:-23}}
+@media (prefers-reduced-motion:reduce){.leaflet-overlay-pane path.route-flow{animation:none}}
+#map.far .pin:not(.is-here) .pin-label{display:none}
+#map.far .pin:not(.is-here) .pin-dot{box-shadow:0 0 0 4px rgba(47,123,255,.25),0 0 12px rgba(47,123,255,.9)}
+/* tačka markera tačno na koordinati (centar kružića), naziv ispod */
+.pin{position:absolute;left:0;top:0;transform:translate(-50%,-8px)}
+.pin.is-here{transform:translate(-50%,-10px)}
+.pin-label{white-space:nowrap}
+[hidden]{display:none!important}

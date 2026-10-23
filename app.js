@@ -1,7 +1,7 @@
 /* Lukavac Info — svaka info tačka ima QR sa svojom adresom, npr. https://domena.ba/vila
    (radi i stari oblik ?l=vila). */
 (() => {
-  const COLORS = ["#1f8a5b", "#2563eb"]; // zelena / plava, naizmjenično
+  const COLORS = ["#2f7bff"]; // sve rute plave, sa sjajem (vidi style.css: .route-*)
   const LANGS = ["bs", "en", "de"];
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -105,7 +105,7 @@
   function pinIcon(loc, isHere, color) {
     return L.divIcon({
       className: "",
-      html: `<div class="pin ${isHere ? "here" : ""}"><div class="pin-dot" style="${isHere ? "" : "background:" + color}"></div><div class="pin-label">${esc(isHere ? t("youAreHere") : tr(loc.name))}</div></div>`,
+      html: `<div class="pin ${isHere ? "is-here" : ""}"><div class="pin-dot" style="${isHere ? "" : "background:" + color}"></div><div class="pin-label">${esc(isHere ? t("youAreHere") : tr(loc.name))}</div></div>`,
       iconSize: [0, 0], iconAnchor: [0, 0]
     });
   }
@@ -173,9 +173,16 @@
   }
 
   /* ---------- mapa: linije, detalji ---------- */
+  // Svaka ruta ima 3 sloja: široki sjaj (glow), jezgru i svjetlosni tok koji putuje linijom.
+  const glows = {}, flows = {};
   function highlight(id) {
-    Object.entries(lines).forEach(([k, l]) => l.setStyle(k === id ? {weight: 8, opacity: 1} : {weight: 5, opacity: id ? 0.35 : 0.85}));
-    if (id && lines[id]) lines[id].bringToFront();
+    Object.keys(lines).forEach(k => {
+      const on = k === id, dim = id && !on;
+      lines[k].setStyle({weight: on ? 7 : 5, opacity: dim ? 0.3 : 1});
+      glows[k]?.setStyle({weight: on ? 22 : 16, opacity: dim ? 0.08 : (on ? 0.55 : 0.35)});
+      flows[k]?.setStyle({opacity: dim ? 0 : 0.95});
+    });
+    if (id && lines[id]) { glows[id].bringToFront(); lines[id].bringToFront(); flows[id].bringToFront(); }
   }
 
   let sheetLoc = null;
@@ -258,6 +265,7 @@
     }).join("");
   }
   function renderLegend() {
+    return; // sve rute su iste (plave) boje, pa legenda nije potrebna; nazivi su na mapi i u listi „Kuda dalje?”
     const lg = $("legend");
     lg.innerHTML = others.map((o, i) => `<div><span style="background:${COLORS[i % COLORS.length]}"></span>${esc(tr(o.name))}</div>`).join("");
     lg.hidden = false;
@@ -311,6 +319,9 @@
 
     map = L.map("map", {zoomControl: false, attributionControl: true}).setView([here.lat, here.lng], 17);
     L.control.zoom({position: "bottomleft"}).addTo(map);
+    // kad je mapa daleko (zbog Modraca), sakrij nazive ostalih tačaka da se ne preklapaju; vide se na zum ≥ 15 ili na klik
+    const farLabels = () => map.getContainer().classList.toggle("far", map.getZoom() < 15);
+    map.on("zoomend", farLabels);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
@@ -325,10 +336,17 @@
     const routePromise = Promise.all(others.map(async (o, i) => {
       const r = await getRoute(here, o, pre);
       routes[o.id] = r;
+      glows[o.id] = L.polyline(r.coords, {
+        color: "#3d8bff", weight: 16, opacity: .35, lineCap: "round", lineJoin: "round", className: "route-glow"
+      }).addTo(map).on("click", () => openSheet(o));
       lines[o.id] = L.polyline(r.coords, {
-        color: COLORS[i % COLORS.length], weight: 5, opacity: .85, lineCap: "round",
+        color: "#4f9bff", weight: 5, opacity: 1, lineCap: "round", lineJoin: "round", className: "route-core",
         dashArray: r.approx ? "8 10" : null
       }).addTo(map).on("click", () => openSheet(o));
+      flows[o.id] = L.polyline(r.coords, {
+        color: "#e8f3ff", weight: 2.5, opacity: .95, lineCap: "round", lineJoin: "round", className: "route-flow",
+        dashArray: "1 22", interactive: false
+      }).addTo(map);
     }));
 
     renderHere();

@@ -226,29 +226,32 @@
     },
     {
       "id": "vila",
-      "_status": "Tekst prema bastina.ba i visitlukavac.ba. 'Nekad' fotografiju zamijeniti arhivskom (Zavod za zaštitu naslijeđa TK). Treba saglasnost za postavljanje (nacionalni spomenik).",
+      "_status": "Tekst prema bastina.ba (Zavod za zaštitu naslijeđa TK) i visitlukavac.ba. 'Nekad' fotografiju zamijeniti arhivskom. Audio kaže 'Valenta' – ispravno je 'Valenda' (presnimiti). Treba saglasnost za postavljanje (nacionalni spomenik).",
       "name": {
         "bs": "Vila Solvay",
         "en": "Villa Solvay",
         "de": "Villa Solvay"
       },
       "short": {
-        "bs": "Nacionalni spomenik BiH iz 1912. godine.",
-        "en": "National Monument of Bosnia and Herzegovina, built in 1912.",
-        "de": "Nationaldenkmal von Bosnien und Herzegowina aus dem Jahr 1912."
+        "bs": "Bolnica iz 1912. koja je postala direktorova vila; nacionalni spomenik BiH.",
+        "en": "A 1912 hospital that became the director's villa; National Monument of BiH.",
+        "de": "Ein Krankenhaus von 1912, das zur Direktorenvilla wurde; Nationaldenkmal von BiH."
       },
       "text": {
         "bs": [
-          "Vila Solvay izgrađena je 1911–1912. godine, u vrijeme Austro-Ugarske. Prvobitno je bila zamišljena kao zdravstvena ustanova, a od 1920-ih u njoj je živio direktor tvornice Solvay, Fritz Müller. Zato je Lukavčani i danas zovu „Milerova vila”.",
-          "Fasada spaja secesijske ukrase sa elementima historicizma. Vila stoji u središtu velike zelene površine, a 2015. godine proglašena je nacionalnim spomenikom Bosne i Hercegovine."
+          "Vila Solvay građena je 1911–1912. godine kao bolnica za radnike Fabrike sode. Projekat je u fabričkoj arhivi vođen pod imenom „Krankenhaus”, a zgrada je podignuta zahvaljujući upornosti dr. Adolfa Hempta, prvog ljekara u Lukavcu, i direktora fabrike Josefa Valende.",
+          "Do 1914. ovdje je radila „mala bolnica”, opremljena najsavremenijom medicinskom opremom tog vremena. Od 1926. u zgradi je živio direktor fabrike Fritz Müller, koji ju je pretvorio u porodičnu kuću i dogradio terasu iznad ulaza. Zato je Lukavčani i danas zovu „Milerova vila”.",
+          "Fasada spaja secesijske ukrase sa elementima historicizma, a vila stoji u sredini parka od skoro hektar. Od 2015. godine je nacionalni spomenik Bosne i Hercegovine i jedan od najvažnijih simbola Lukavca."
         ],
         "en": [
-          "Villa Solvay was built in 1911–1912, during Austro-Hungarian rule. It was originally planned as a hospital for the soda factory; from the 1920s it was the home of the Solvay director, Fritz Müller, which is why locals still call it “Müller's Villa”.",
-          "Its façade combines Secession ornament with historicist details. The villa stands in the middle of a large green space and was declared a National Monument of Bosnia and Herzegovina in 2015."
+          "Villa Solvay was built in 1911–1912 as a hospital for the soda factory's workers. In the factory archives the project was simply called “Krankenhaus”, and the building owes its existence to the persistence of Dr Adolf Hempt, Lukavac's first doctor, and factory director Josef Valenda.",
+          "Until 1914 it housed a “little hospital” with the most modern medical equipment of its day. From 1926 the factory director Fritz Müller lived here; he turned it into a family home and added the terrace above the entrance, which is why locals still call it “Müller's Villa”.",
+          "The façade combines Secession ornament with historicist details, and the villa stands in the middle of a park of almost one hectare. Since 2015 it has been a National Monument of Bosnia and Herzegovina and one of the symbols of Lukavac."
         ],
         "de": [
-          "Die Villa Solvay wurde 1911–1912 in der österreichisch-ungarischen Zeit errichtet. Ursprünglich war sie als Krankenhaus der Sodafabrik geplant; ab den 1920er-Jahren wohnte hier der Solvay-Direktor Fritz Müller, weshalb sie im Volksmund bis heute „Müllers Villa” heißt.",
-          "Die Fassade verbindet Jugendstil-Ornamente mit Elementen des Historismus. Die Villa steht inmitten einer großen Grünfläche und wurde 2015 zum Nationaldenkmal von Bosnien und Herzegowina erklärt."
+          "Die Villa Solvay wurde 1911–1912 als Krankenhaus für die Arbeiter der Sodafabrik gebaut. Im Fabrikarchiv hieß das Projekt schlicht „Krankenhaus”; zu verdanken ist der Bau der Beharrlichkeit von Dr. Adolf Hempt, dem ersten Arzt in Lukavac, und Fabrikdirektor Josef Valenda.",
+          "Bis 1914 war hier ein „kleines Krankenhaus” mit der modernsten medizinischen Ausstattung seiner Zeit untergebracht. Ab 1926 wohnte hier Fabrikdirektor Fritz Müller; er machte daraus ein Wohnhaus und ließ die Terrasse über dem Eingang anbauen. Deshalb heißt sie im Volksmund bis heute „Müllers Villa”.",
+          "Die Fassade verbindet Jugendstil-Ornamente mit Elementen des Historismus, die Villa steht inmitten eines fast einen Hektar großen Parks. Seit 2015 ist sie Nationaldenkmal von Bosnien und Herzegowina und eines der Wahrzeichen von Lukavac."
         ]
       },
       "image": "images/vila.jpg",
@@ -263,7 +266,156 @@
       "lat": 44.52833550883504,
       "lng": 18.53046736491368,
       "mode": "foot",
-      "coordsVerified": true
+      "coordsVerified": true,
+      "imageCredit": "Foto: Turistička zajednica Lukavac",
+      "gallery": [
+        {
+          "src": "images/vila-iz-zraka.jpg",
+          "credit": "TZ Lukavac"
+        },
+        {
+          "src": "images/vila-park.jpg",
+          "credit": "TZ Lukavac"
+        },
+        {
+          "src": "images/vila-danas.jpg",
+          "credit": ""
+        }
+      ],
+      "more": {
+        "bs": {
+          "sections": [
+            {
+              "h": "Kako je nastala",
+              "p": [
+                "Projekat bolnice stigao je u Lukavac 21. jula 1911, a protokol o izgradnji bolnice potpisan je samo pet dana kasnije. Zgrada je bila gotova do kraja 1912. godine.",
+                "Te godine su novine pisale da se u Lukavcu gradi i Pasterov zavod, ali on u ovoj zgradi nikada nije zaživio. Dr. Hempt je tu ideju ipak ostvario: 1922. godine učestvovao je u osnivanju Pasterovog zavoda u Novom Sadu."
+              ]
+            },
+            {
+              "h": "Ljekari Vile",
+              "p": [
+                "Dr. Adolf Hempt bio je prvi ljekar u Lukavcu od 1905. godine i duša cijelog projekta. Do 1914. ovdje je vodio „Fabrikspital”, kako se bolnica zvala u fabričkim dokumentima.",
+                "Tokom Prvog svjetskog rata zgrada je služila kao bolnički stacionar za vojnike. Kasnije su ovdje neko vrijeme ordinirali ljekari iz Tuzle, a od 1924. dr. Ljudevit Jurinac, koji je u Lukavac došao iz Varaždina i ostao glavni ljekar sve do 1946. godine."
+              ]
+            },
+            {
+              "h": "Direktorova kuća",
+              "p": [
+                "Fritz Müller vodio je fabriku sode od 1926. do 1943. godine i sve to vrijeme živio u vili. Pod njim je bolnica postala porodični dom, a po njegovim uputama dograđena je terasa iznad glavnog ulaza na sjevernoj strani."
+              ]
+            },
+            {
+              "h": "Vila u brojkama",
+              "p": [
+                "Osnova zgrade je pravougaona, 19,05 × 13,80 metara. Četverovodni krov visok je do sljemena 10,74 metra.",
+                "Glavni ulaz je sa sjeverne strane: dvokrilna vrata visoka 3,20 metra, natkriveni trijem i vanjsko stepenište široko 2,26 metara. Vila stoji u sredini zelene površine od 97 × 94 metra."
+              ]
+            },
+            {
+              "h": "Nacionalni spomenik i budućnost",
+              "p": [
+                "U novembru 2015. godine Vila Solvay proglašena je nacionalnim spomenikom Bosne i Hercegovine zbog svoje umjetničke, simboličke i ambijentalne vrijednosti te očuvane izvornosti.",
+                "Vila i danas okuplja ljude: u njoj su održane naučna konferencija o naslijeđu Lukavca (2015) i promocija knjige o nastanku Lukavca (2023). Stručnjaci vide njenu budućnost u kulturi i turizmu, uz obnovu zgrade i uređenje parka."
+              ]
+            }
+          ]
+        },
+        "en": {
+          "sections": [
+            {
+              "h": "How it began",
+              "p": [
+                "The hospital plans arrived in Lukavac on 21 July 1911, and the agreement to build it was signed just five days later. The building was finished by the end of 1912.",
+                "That year newspapers reported that a Pasteur Institute was also being built in Lukavac, but it never opened in this building. Dr Hempt realised the idea elsewhere: in 1922 he helped found the Pasteur Institute in Novi Sad."
+              ]
+            },
+            {
+              "h": "The villa's doctors",
+              "p": [
+                "Dr Adolf Hempt was Lukavac's first doctor from 1905 and the driving force behind the project. Until 1914 he ran the “Fabrikspital” here, as the hospital was called in factory documents.",
+                "During the First World War the building served as an infirmary for soldiers. Later, doctors from Tuzla held surgeries here for a time, and from 1924 Dr Ljudevit Jurinac, who came from Varaždin and remained chief physician until 1946."
+              ]
+            },
+            {
+              "h": "The director's house",
+              "p": [
+                "Fritz Müller ran the soda factory from 1926 to 1943 and lived in the villa throughout. Under him the hospital became a family home, and on his instructions the terrace above the main north entrance was added."
+              ]
+            },
+            {
+              "h": "The villa in numbers",
+              "p": [
+                "The building is rectangular, 19.05 × 13.80 metres. Its hipped roof rises to 10.74 metres at the ridge.",
+                "The main entrance is on the north side: a double door 3.20 metres high, a covered porch and an outside staircase 2.26 metres wide. The villa stands in the middle of a green space measuring 97 × 94 metres."
+              ]
+            },
+            {
+              "h": "National Monument and the future",
+              "p": [
+                "In November 2015 Villa Solvay was declared a National Monument of Bosnia and Herzegovina for its artistic, symbolic and townscape value and its preserved authenticity.",
+                "The villa still brings people together: it hosted a scientific conference on Lukavac's heritage (2015) and the launch of a book on the origins of Lukavac (2023). Experts see its future in culture and tourism, with restoration of the building and its park."
+              ]
+            }
+          ]
+        },
+        "de": {
+          "sections": [
+            {
+              "h": "Wie alles begann",
+              "p": [
+                "Die Pläne für das Krankenhaus trafen am 21. Juli 1911 in Lukavac ein, der Bauvertrag wurde nur fünf Tage später unterzeichnet. Ende 1912 war das Gebäude fertig.",
+                "Damals berichteten Zeitungen, in Lukavac entstehe auch ein Pasteur-Institut, doch in diesem Gebäude wurde es nie eröffnet. Dr. Hempt verwirklichte die Idee dennoch: 1922 wirkte er an der Gründung des Pasteur-Instituts in Novi Sad mit."
+              ]
+            },
+            {
+              "h": "Die Ärzte der Villa",
+              "p": [
+                "Dr. Adolf Hempt war ab 1905 der erste Arzt in Lukavac und die treibende Kraft des Projekts. Bis 1914 leitete er hier das „Fabrikspital”, wie das Krankenhaus in den Fabrikakten hieß.",
+                "Im Ersten Weltkrieg diente das Gebäude als Krankenstation für Soldaten. Später ordinierten hier eine Zeit lang Ärzte aus Tuzla und ab 1924 Dr. Ljudevit Jurinac, der aus Varaždin kam und bis 1946 Chefarzt blieb."
+              ]
+            },
+            {
+              "h": "Das Haus des Direktors",
+              "p": [
+                "Fritz Müller leitete die Sodafabrik von 1926 bis 1943 und wohnte die ganze Zeit in der Villa. Unter ihm wurde aus dem Krankenhaus ein Wohnhaus, und auf seine Anweisung entstand die Terrasse über dem Haupteingang auf der Nordseite."
+              ]
+            },
+            {
+              "h": "Die Villa in Zahlen",
+              "p": [
+                "Der Grundriss ist rechteckig, 19,05 × 13,80 Meter. Das Walmdach ist bis zum First 10,74 Meter hoch.",
+                "Der Haupteingang liegt im Norden: eine 3,20 Meter hohe Flügeltür, ein überdachter Vorbau und eine 2,26 Meter breite Außentreppe. Die Villa steht inmitten einer Grünfläche von 97 × 94 Metern."
+              ]
+            },
+            {
+              "h": "Nationaldenkmal und Zukunft",
+              "p": [
+                "Im November 2015 wurde die Villa Solvay wegen ihres künstlerischen, symbolischen und städtebaulichen Werts und ihrer erhaltenen Ursprünglichkeit zum Nationaldenkmal von Bosnien und Herzegowina erklärt.",
+                "Die Villa bringt bis heute Menschen zusammen: Hier fanden eine wissenschaftliche Konferenz über das Erbe von Lukavac (2015) und die Vorstellung eines Buches über die Entstehung von Lukavac (2023) statt. Fachleute sehen ihre Zukunft in Kultur und Tourismus, mit einer Sanierung des Gebäudes und des Parks."
+              ]
+            }
+          ]
+        }
+      },
+      "sources": [
+        {
+          "t": "bastina.ba – Vila Solvay",
+          "u": "https://bastina.ba/vila-solvay/"
+        },
+        {
+          "t": "bastina.ba – panel 2025",
+          "u": "https://bastina.ba/?p=7218"
+        },
+        {
+          "t": "bastina.ba – promocija knjige 2023",
+          "u": "https://bastina.ba/?p=6873"
+        },
+        {
+          "t": "visitlukavac.ba",
+          "u": "https://visitlukavac.ba/lokacija/vila-solvay/"
+        }
+      ]
     },
     {
       "id": "macan-marija",

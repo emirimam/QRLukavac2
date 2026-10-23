@@ -5,23 +5,67 @@
     {
       "id": "setaliste",
       "_status": "Čeka tekst, fotografije i audio od TZ.",
-      "name": { "bs": "Lukavačko šetalište", "en": "Lukavac Promenade", "de": "Promenade Lukavac" },
-      "short": { "bs": "Polazna tačka info staze.", "en": "Starting point of the info trail.", "de": "Ausgangspunkt des Info-Pfads." },
+      "name": {
+        "bs": "Lukavačko šetalište",
+        "en": "Lukavac Promenade",
+        "de": "Promenade Lukavac"
+      },
+      "short": {
+        "bs": "Polazna tačka info staze.",
+        "en": "Starting point of the info trail.",
+        "de": "Ausgangspunkt des Info-Pfads."
+      },
       "text": {
-        "bs": ["TODO: tekst o šetalištu od Turističke zajednice Lukavac (2–3 kratka pasusa: šta je ovo mjesto, zanimljivost, šta vidjeti u blizini)."]
+        "bs": [
+          "TODO: tekst o šetalištu od Turističke zajednice Lukavac (2–3 kratka pasusa: šta je ovo mjesto, zanimljivost, šta vidjeti u blizini)."
+        ]
       },
       "image": "",
       "compare": null,
-      "audio": { "bs": "audio/setaliste.mp3" },
-      "lat": 44.5432,
-      "lng": 18.5248,
+      "audio": {
+        "bs": "audio/setaliste.mp3"
+      },
+      "lat": 44.53348921058252,
+      "lng": 18.53414924746493,
       "mode": "foot",
-      "coordsVerified": false
+      "coordsVerified": true
+    },
+    {
+      "id": "trg-slobode",
+      "_status": "Koordinate potvrđene. Čeka tekst (historija centra, institucije), fotografije i audio od TZ.",
+      "name": {
+        "bs": "Trg slobode",
+        "en": "Freedom Square",
+        "de": "Platz der Freiheit"
+      },
+      "short": {
+        "bs": "Središnji gradski trg uz zgradu Grada Lukavca.",
+        "en": "The central town square next to Lukavac City Hall.",
+        "de": "Der zentrale Stadtplatz neben dem Rathaus von Lukavac."
+      },
+      "text": {
+        "bs": [
+          "TODO: tekst o Trgu slobode od Turističke zajednice Lukavac (historijski razvoj centra grada, ključne institucije)."
+        ]
+      },
+      "image": "",
+      "compare": null,
+      "audio": {
+        "bs": "audio/trg-slobode.mp3"
+      },
+      "lat": 44.534385433640175,
+      "lng": 18.53272100709007,
+      "mode": "foot",
+      "coordsVerified": true
     },
     {
       "id": "vila",
       "_status": "Tekst prema bastina.ba i visitlukavac.ba. 'Nekad' fotografiju zamijeniti arhivskom (Zavod za zaštitu naslijeđa TK). Treba saglasnost za postavljanje (nacionalni spomenik).",
-      "name": { "bs": "Vila Solvay", "en": "Villa Solvay", "de": "Villa Solvay" },
+      "name": {
+        "bs": "Vila Solvay",
+        "en": "Villa Solvay",
+        "de": "Villa Solvay"
+      },
       "short": {
         "bs": "Nacionalni spomenik BiH iz 1912. godine.",
         "en": "National Monument of Bosnia and Herzegovina, built in 1912.",
@@ -42,17 +86,27 @@
         ]
       },
       "image": "images/vila.jpg",
-      "compare": { "then": "images/vila-ranije.jpg", "now": "images/vila-danas.jpg" },
-      "audio": { "bs": "audio/vila.mp3", "en": "audio/vila-en.mp3" },
-      "lat": 44.5398,
-      "lng": 18.5222,
+      "compare": {
+        "then": "images/vila-ranije.jpg",
+        "now": "images/vila-danas.jpg"
+      },
+      "audio": {
+        "bs": "audio/vila.mp3",
+        "en": "audio/vila-en.mp3"
+      },
+      "lat": 44.52833550883504,
+      "lng": 18.53046736491368,
       "mode": "foot",
-      "coordsVerified": false
+      "coordsVerified": true
     },
     {
       "id": "park",
-      "_status": "Tekst prema javnim izvorima; TZ da provjeri. Čeka fotografije i audio.",
-      "name": { "bs": "Gradski park", "en": "City Park", "de": "Stadtpark" },
+      "_status": "Koordinate nisu potvrđene (Park „Obdanište” kod autobuske stanice?). Tekst prema javnim izvorima; TZ da provjeri. Čeka fotografije i audio.",
+      "name": {
+        "bs": "Gradski park",
+        "en": "City Park",
+        "de": "Stadtpark"
+      },
       "short": {
         "bs": "Obnovljeni park uz pješačku zonu.",
         "en": "Renovated park next to the pedestrian zone.",
@@ -74,7 +128,9 @@
       },
       "image": "",
       "compare": null,
-      "audio": { "bs": "audio/park.mp3" },
+      "audio": {
+        "bs": "audio/park.mp3"
+      },
       "lat": 44.5417,
       "lng": 18.5282,
       "mode": "foot",
@@ -83,7 +139,11 @@
     {
       "id": "macan-marija",
       "_status": "NACRT prema bastina.ba (Zavod za zaštitu naslijeđa TK). TZ da provjeri tekst i koordinate.",
-      "name": { "bs": "Spomenik Macan Marija", "en": "Macan Marija Memorial", "de": "Denkmal Macan Marija" },
+      "name": {
+        "bs": "Spomenik Macan Marija",
+        "en": "Macan Marija Memorial",
+        "de": "Denkmal Macan Marija"
+      },
       "short": {
         "bs": "Centralna spomen-kosturnica iz 1962., nacionalni spomenik BiH.",
         "en": "Central memorial ossuary from 1962, National Monument of BiH.",
@@ -105,16 +165,22 @@
       },
       "image": "",
       "compare": null,
-      "audio": { "bs": "audio/macan-marija.mp3" },
-      "lat": 44.5452,
-      "lng": 18.5305,
+      "audio": {
+        "bs": "audio/macan-marija.mp3"
+      },
+      "lat": 44.531584487724224,
+      "lng": 18.528038296924972,
       "mode": "foot",
-      "coordsVerified": false
+      "coordsVerified": true
     },
     {
       "id": "modrac",
       "_status": "Čeka dopunu teksta (plaže, staze, sadržaji), fotografije i audio od TZ. Koordinate: ciljati plažu/parking, ne sredinu jezera.",
-      "name": { "bs": "Jezero Modrac", "en": "Lake Modrac", "de": "Modrac-See" },
+      "name": {
+        "bs": "Jezero Modrac",
+        "en": "Lake Modrac",
+        "de": "Modrac-See"
+      },
       "short": {
         "bs": "Akumulaciono jezero na rijeci Spreči.",
         "en": "Reservoir lake on the Spreča river.",
@@ -125,14 +191,20 @@
           "Jezero Modrac je akumulaciono jezero na rijeci Spreči, omiljeno mjesto za šetnju i ribolov.",
           "TODO: dopuniti tekst (plaže, staze, sadržaji)."
         ],
-        "en": ["Lake Modrac is a reservoir on the Spreča river, popular for walks and fishing."],
-        "de": ["Der Modrac-See ist ein Stausee am Fluss Spreča, beliebt zum Spazieren und Angeln."]
+        "en": [
+          "Lake Modrac is a reservoir on the Spreča river, popular for walks and fishing."
+        ],
+        "de": [
+          "Der Modrac-See ist ein Stausee am Fluss Spreča, beliebt zum Spazieren und Angeln."
+        ]
       },
       "image": "",
       "compare": null,
-      "audio": { "bs": "audio/modrac.mp3" },
+      "audio": {
+        "bs": "audio/modrac.mp3"
+      },
       "lat": 44.5205,
-      "lng": 18.5480,
+      "lng": 18.548,
       "mode": "car",
       "coordsVerified": false
     }
@@ -145,7 +217,11 @@
     }
   },
   "about": {
-    "title": { "bs": "Digitalna info staza Lukavca", "en": "Lukavac Digital Info Trail", "de": "Digitaler Info-Pfad Lukavac" },
+    "title": {
+      "bs": "Digitalna info staza Lukavca",
+      "en": "Lukavac Digital Info Trail",
+      "de": "Digitaler Info-Pfad Lukavac"
+    },
     "text": {
       "bs": "Svaka info tačka ima svoj QR kod. Skenirajte ga i vidite gdje se nalazite, šta je u blizini i kako doći do sljedeće tačke. Projekat Turističke zajednice Lukavac.",
       "en": "Every info point has its own QR code. Scan it to see where you are, what is nearby and how to reach the next point. A project of the Lukavac Tourist Board.",

@@ -165,3 +165,11 @@ details.more[open] summary{border-bottom:1px solid var(--line)}
 .more-body p{margin:0 0 10px}
 .more-src{font-size:13px;color:var(--muted);margin-top:12px;line-height:1.5}
 .more-src a{color:var(--deep)}
+
+/* galerija fotografija */
+.gallery{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:-4px 0 14px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.gallery::-webkit-scrollbar{display:none}
+.g-item{position:relative;flex:none;width:72%;max-width:320px;aspect-ratio:4/3;border-radius:12px;overflow:hidden;scroll-snap-align:start;background:#e6e2d8}
+.g-item img{width:100%;height:100%;object-fit:cover;display:block;margin:0;border-radius:0;aspect-ratio:auto}
+.g-credit{position:absolute;right:6px;bottom:6px;font-size:11px;color:#fff;background:rgba(20,35,31,.65);padding:2px 6px;border-radius:5px}
+.img-credit{font-size:12px;color:var(--muted);margin:-8px 0 12px;text-align:right}

@@ -123,6 +123,15 @@
     img.onerror = () => img.hidden = true;
   }
   const paras = arr => (tr(arr) || []).map(p => `<p>${esc(p)}</p>`).join("");
+  // Galerija: gallery = [{src, credit}] – traka fotografija; klik otvara punu sliku
+  function setGallery(el, loc) {
+    const g = (loc.gallery || []).filter(x => x && x.src);
+    if (!g.length) { el.hidden = true; el.innerHTML = ""; return; }
+    el.innerHTML = g.map(x => `<a href="${esc(x.src)}" target="_blank" rel="noopener" class="g-item">
+      <img src="${esc(x.src)}" alt="${esc(tr(loc.name))}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('a').remove()">
+      ${x.credit ? `<span class="g-credit">${esc(x.credit)}</span>` : ""}</a>`).join("");
+    el.hidden = false;
+  }
   // „Saznaj više”: dodatni dio koji se otvara na klik. Polje more = {bs: {sections: [{h, p: []}], sources: [{t, u}]}, en: …}
   function setMore(el, loc) {
     const m = tr(loc.more);
@@ -204,6 +213,7 @@
     $("sheetText").innerHTML = paras(loc.text);
     setMore($("sheetMore"), loc);
     setImage($("sheetImg"), loc.image, tr(loc.name));
+    setGallery($("sheetGallery"), loc);
     setAudio($("sheetAudio"), $("sheetAudioMissing"), audioFor(loc));
     const travel = loc.mode === "car" ? "driving" : "walking";
     $("sheetNav").href = `https://www.google.com/maps/dir/?api=1&origin=${here.lat},${here.lng}&destination=${loc.lat},${loc.lng}&travelmode=${travel}`;
@@ -256,6 +266,8 @@
     $("hereText").innerHTML = paras(here.text);
     setMore($("hereMore"), here);
     setImage($("hereImg"), here.image, tr(here.name));
+    $("hereImgCredit").textContent = here.image && here.imageCredit ? here.imageCredit : ""; $("hereImgCredit").hidden = !(here.image && here.imageCredit);
+    setGallery($("hereGallery"), here);
     setAudio($("hereAudio"), $("hereAudioMissing"), audioFor(here));
     setupCompare($("hereCompare"), here.compare, tr(here.name));
     $("aboutTitle").textContent = tr(data.about?.title) || "";

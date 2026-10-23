@@ -4,7 +4,7 @@
   "locations": [
     {
       "id": "setaliste",
-      "_status": "Tekst prema istraživanju (lukavac.ba, RTV Lukavac, SodaLIVE, Tuzlanski.ba, Bljesak, bastina.ba). Otvoreno: porijeklo naziva „Bremen”. Čeka fotografije (dozvola Grada/TZ) i audio.",
+      "_status": "Tekst prema istraživanju (lukavac.ba, RTV Lukavac, SodaLIVE, Tuzlanski.ba, Bljesak, bastina.ba). Otvoreno: porijeklo naziva „Bremen”. Čeka fotografije (dozvola Grada/TZ) i audio. FOTOGRAFIJE PRIVREMENE: učitavaju se sa tuđih adresa (SodaLIVE, Google sličice); prije javnog puštanja pribaviti dozvolu i originale, pa ih spremiti u images/.",
       "name": {
         "bs": "Lukavačko šetalište",
         "en": "Lukavac Promenade",
@@ -32,7 +32,7 @@
           "Hier trinken die Einheimischen ihren Morgenkaffee, flanieren am Abend und treffen Freunde; hier feiert die Stadt ihren Stadttag und veranstaltet den „Winter in Lukavac”. Setzen Sie sich auf eine Bank oder auf eine Café-Terrasse; die anderen Stationen des Pfads mit Weg und Entfernung sehen Sie auf der Karte oben."
         ]
       },
-      "image": "",
+      "image": "https://sodalive.ba/wp-content/uploads/2024/03/429981673_906316837949764_470393550624473660_n.jpg",
       "compare": null,
       "audio": {
         "bs": "audio/setaliste.mp3"
@@ -178,6 +178,21 @@
         {
           "t": "bastina.ba",
           "u": "https://bastina.ba/mali-bec-knjiga-o-demografskim-i-socijalnim-promjenama-u-lukavcu-na-razmedju-19-i-20-stoljeca"
+        }
+      ],
+      "imageCredit": "Foto: SodaLIVE",
+      "gallery": [
+        {
+          "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWmNtuHsq8EXX60KS1X6y8hmQnzKYmlQZ2IQnGIsyTINDle2S2ShWDzE4&s=10",
+          "credit": ""
+        },
+        {
+          "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlCymxyuLQXwSZUG9_zZK6kgXWjg5v0s2vpvc2G8RcYlH6fpwJQfeIHz0&s=10",
+          "credit": ""
+        },
+        {
+          "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ08MwR8eAgNedtO68KA_moRFi-0ov6_WUrohO7s1gh1HbyuTXP8mVg2Oc&s=10",
+          "credit": ""
         }
       ]
     },

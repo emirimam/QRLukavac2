@@ -22,7 +22,7 @@
       stampNew: "Novi pečat!", stampHave: "Pečat za ovu lokaciju već imate.", stampNoCode: "Pečat se dobija skeniranjem QR koda na info tabli.",
       stampBad: "Ovaj QR kod nije važeći. Skenirajte kod sa info table.", gpsOk: "GPS potvrđen", stampWait: "Provjeravamo pečat…",
       rewards: "Nagrade", rewardShow: "Pokažite ovaj kod kod sponzora:", rewardUsed: "Iskorišteno", rewardUntil: d => `Važi do ${d}`,
-      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} pečata`, rewardPlaces: "Potrebne lokacije:", sponsor: "Sponzor"
+      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} pečata`, rewardPlaces: "Potrebne lokacije:", sponsor: "Sponzor", home: "Sve lokacije"
     },
     en: {
       welcome: "Welcome to Lukavac", youAreAt: "You are at:", introHint: "See where the other sights are and how to get there.",
@@ -34,7 +34,7 @@
       stampNew: "New stamp!", stampHave: "You already have the stamp for this place.", stampNoCode: "Scan the QR code on the info board to get a stamp.",
       stampBad: "This QR code is not valid. Scan the code on the info board.", gpsOk: "GPS confirmed", stampWait: "Checking your stamp…",
       rewards: "Rewards", rewardShow: "Show this code to the sponsor:", rewardUsed: "Redeemed", rewardUntil: d => `Valid until ${d}`,
-      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} stamps`, rewardPlaces: "Required places:", sponsor: "Sponsor"
+      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} stamps`, rewardPlaces: "Required places:", sponsor: "Sponsor", home: "All places"
     },
     de: {
       welcome: "Willkommen in Lukavac", youAreAt: "Sie sind hier:", introHint: "Sehen Sie, wo die anderen Orte liegen und wie Sie hinkommen.",
@@ -46,7 +46,7 @@
       stampNew: "Neuer Stempel!", stampHave: "Diesen Stempel haben Sie bereits.", stampNoCode: "Scannen Sie den QR-Code auf der Infotafel, um einen Stempel zu erhalten.",
       stampBad: "Dieser QR-Code ist ungültig. Scannen Sie den Code auf der Infotafel.", gpsOk: "GPS bestätigt", stampWait: "Stempel wird geprüft…",
       rewards: "Belohnungen", rewardShow: "Zeigen Sie diesen Code beim Sponsor:", rewardUsed: "Eingelöst", rewardUntil: d => `Gültig bis ${d}`,
-      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} Stempel`, rewardPlaces: "Benötigte Orte:", sponsor: "Sponsor"
+      rewardNeed: (h, n) => `${Math.min(h, n)} / ${n} Stempel`, rewardPlaces: "Benötigte Orte:", sponsor: "Sponsor", home: "Alle Orte"
     }
   };
 
@@ -435,7 +435,7 @@
     const q = new URLSearchParams(location.search).get("l");
     if (q) return q;
     const seg = location.pathname.replace(/^\/+|\/+$/g, "").split("/")[0];
-    return seg && seg !== "index.html" ? decodeURIComponent(seg) : null;
+    return seg && !["index.html", "lokacija", "lokacija.html"].includes(seg) ? decodeURIComponent(seg) : null;
   }
 
   async function init() {
@@ -455,8 +455,10 @@
       if (!data) { document.body.innerHTML = "<p style='padding:20px'>Podaci o lokacijama nisu dostupni. Pokušajte ponovo.</p>"; return; }
       pre = await loadJSON("/data/routes.json");
     }
-    const id = currentId() || data.defaultId;
-    here = data.locations.find(l => l.id === id) || data.locations.find(l => l.id === data.defaultId) || data.locations[0];
+    const id = currentId();
+    // bez lokacije u adresi, ili lokacija ne postoji / isključena je -> početna stranica sa svim lokacijama
+    here = id && data.locations.find(l => l.id === id);
+    if (!here) { location.replace("/"); return; }
     others = data.locations.filter(l => l !== here);
     if (apiMode) recordScan(code); else addStamp(here.id);
     applyStatic(); renderLangs();

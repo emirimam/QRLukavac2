@@ -3,116 +3,67 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lukavac Info</title>
-<meta name="description" content="Digitalna info staza Lukavca: mapa, putevi do ključnih lokacija, priče i audio vodič.">
+<title>Lukavac Info · Digitalna info staza</title>
+<meta name="description" content="Digitalna info staza Lukavca: QR kodovi na info tablama otvaraju mapu, priče i audio vodič. Projekat Udruženja mladih StartITi, na poziv Turističke zajednice Lukavac.">
 <meta name="theme-color" content="#123b34">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600&display=swap">
 <link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/home.css">
+<script>
+  // stari oblik adrese (?l=vila) vodi direktno na stranicu lokacije
+  (function () { var l = new URLSearchParams(location.search).get("l"); if (l && /^[a-z0-9-]+$/.test(l)) location.replace("/" + l); })();
+</script>
 </head>
-<body>
-  <main>
-    <div class="map-wrap">
-      <div id="map" aria-label="Mapa Lukavca sa info tačkama"></div>
-
-      <div class="langs" id="langs" role="group" aria-label="Jezik / Language"></div>
-
-      <div id="intro" class="intro">
-        <div class="intro-eyebrow" data-t="welcome"></div>
-        <div class="intro-title"><span data-t="youAreAt"></span> <span id="introHere">…</span></div>
-        <div class="intro-hint" data-t="introHint"></div>
-      </div>
-
-      <div class="legend" id="legend" hidden></div>
+<body class="home">
+  <header class="h-hero">
+    <div class="langs" id="langs" role="group" aria-label="Jezik / Language"></div>
+    <div class="h-hero-in">
+      <div class="h-eyebrow" data-h="eyebrow"></div>
+      <h1 data-h="title"></h1>
+      <p class="h-lead" data-h="lead"></p>
+      <a class="h-cta" href="#mjesta" data-h="cta"></a>
     </div>
+  </header>
 
-    <section id="here" class="here" hidden>
-      <div class="here-eyebrow" data-t="youAreHere"></div>
-      <h1 id="hereName"></h1>
-      <img id="hereImg" alt="" hidden referrerpolicy="no-referrer">
-      <div class="img-credit" id="hereImgCredit" hidden></div>
-      <div class="gallery" id="hereGallery" hidden></div>
-      <div class="audio" id="hereAudioBox">
-        <div class="audio-label" data-t="audioStory"></div>
-        <audio id="hereAudio" controls preload="none"></audio>
-        <div class="audio-missing" id="hereAudioMissing" data-t="audioSoon" hidden></div>
+  <main>
+    <section class="h-sec h-map-sec" aria-labelledby="mapTitle">
+      <h2 id="mapTitle" data-h="mapTitle"></h2>
+      <p class="h-sub" data-h="mapSub"></p>
+      <div id="homeMap" class="h-map" aria-label="Mapa info tačaka"></div>
+    </section>
+
+    <section class="h-sec" id="mjesta" aria-labelledby="placesTitle">
+      <h2 id="placesTitle" data-h="placesTitle"></h2>
+      <div id="places" class="h-places"><p class="h-sub">…</p></div>
+    </section>
+
+    <section class="h-sec" aria-labelledby="howTitle">
+      <h2 id="howTitle" data-h="howTitle"></h2>
+      <ol class="h-steps" id="steps"></ol>
+    </section>
+
+    <section class="h-sec h-two">
+      <div class="h-box">
+        <h2 data-h="passTitle"></h2>
+        <p data-h="passText"></p>
       </div>
-      <div id="hereText" class="text"></div>
-      <details class="more" id="hereMore" hidden><summary data-t="moreAbout"></summary><div class="more-body"></div></details>
-
-      <div class="compare" id="hereCompare" hidden>
-        <h2 data-t="thenNow"></h2>
-        <div class="compare-box">
-          <img class="cmp-now" alt="">
-          <div class="cmp-then-wrap"><img class="cmp-then" alt=""></div>
-          <div class="cmp-handle"></div>
-          <span class="cmp-tag left" data-t="then"></span>
-          <span class="cmp-tag right" data-t="now"></span>
-        </div>
-        <label class="cmp-range"><span class="sr" data-t="thenNow"></span>
-          <input type="range" min="0" max="100" value="50">
-        </label>
+      <div class="h-box">
+        <h2 data-h="privTitle"></h2>
+        <ul class="h-list" id="privacy"></ul>
       </div>
-
-      <button class="btn share" id="shareBtn" type="button" hidden>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4"/><path d="M15.4 6.5l-6.8 4"/></svg>
-        <span data-t="share"></span>
-      </button>
     </section>
-
-    <section class="passport" id="passport" hidden>
-      <div class="passport-head">
-        <div>
-          <div class="passport-eyebrow" data-t="passport"></div>
-          <div class="passport-count" id="passportCount"></div>
-        </div>
-        <div class="stamp" id="passportStamp" aria-hidden="true"></div>
-      </div>
-      <p class="passport-status" id="passportStatus" role="status" hidden></p>
-      <div class="passport-dots" id="passportDots"></div>
-      <p class="passport-reward" id="passportReward"></p>
-      <div class="rewards" id="rewards" hidden></div>
-    </section>
-
-    <section class="others" id="othersBox" hidden>
-      <h2 data-t="whereNext"></h2>
-      <div id="others" class="cards"></div>
-    </section>
-
-    <section class="events" id="eventsBox" hidden>
-      <h2 data-t="events"></h2>
-      <div id="events" class="event-list"></div>
-    </section>
-
-    <footer id="about" class="about" hidden>
-      <h2 id="aboutTitle"></h2>
-      <p id="aboutText"></p>
-      <p class="credits">Mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · rute: OSRM / FOSSGIS</p>
-    </footer>
   </main>
 
-  <div id="sheet" class="sheet" role="dialog" aria-modal="false" aria-labelledby="sheetName" hidden>
-    <button class="sheet-close" id="sheetClose" type="button" aria-label="Zatvori">×</button>
-    <div class="sheet-meta" id="sheetMeta"></div>
-    <h3 id="sheetName"></h3>
-    <img id="sheetImg" alt="" hidden referrerpolicy="no-referrer">
-    <div class="gallery" id="sheetGallery" hidden></div>
-    <p id="sheetShort" class="sheet-short"></p>
-    <div id="sheetText" class="text"></div>
-    <details class="more" id="sheetMore" hidden><summary data-t="moreAbout"></summary><div class="more-body"></div></details>
-    <div class="audio">
-      <audio id="sheetAudio" controls preload="none"></audio>
-      <div class="audio-missing" id="sheetAudioMissing" data-t="audioSoon" hidden></div>
-    </div>
-    <div class="sheet-actions">
-      <a id="sheetNav" class="btn primary" target="_blank" rel="noopener" data-t="navigate"></a>
-      <button id="sheetFocus" class="btn" type="button" data-t="showRoute"></button>
-    </div>
-  </div>
+  <footer class="about h-about">
+    <h2 data-h="aboutTitle"></h2>
+    <p data-h="aboutText"></p>
+    <p data-h="aboutText2"></p>
+    <p class="credits">Mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> · rute: OSRM / FOSSGIS</p>
+  </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-  <script src="/app.js"></script>
-  <!-- Vercel Web Analytics: broj otvaranja po lokaciji (/vila, /park…). Uključiti u Vercel projektu: Analytics → Enable. -->
+  <script src="/home.js"></script>
   <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

@@ -109,7 +109,7 @@
     sel.value = prev && stats.locations.some(l => l.id === prev) ? prev : "";
 
     const rows = stats.locations.map(l => `<tr data-id="${esc(l.id)}" class="${l.published ? "" : "off"}">
-      <th scope="row">${esc(tr(l.name))}${l.published ? "" : ' <span class="badge">skrivena</span>'}${l.stamp_enabled ? "" : ' <span class="badge">bez pečata</span>'}</th>
+      <th scope="row">${esc(tr(l.name))}${l.published ? "" : ' <span class="badge warn">isključena</span>'}${l.stamp_enabled ? "" : ' <span class="badge">bez pečata</span>'}</th>
       <td>${fmt(l.today)}</td><td>${fmt(l.yesterday)}</td><td>${fmt(l.d7)}</td><td>${fmt(l.d30)}</td><td>${fmt(l.uniq30)}</td>
       <td>${fmt(l.stamps)}</td><td>${pct(l.stamps_gps, l.stamps)}</td><td class="${l.rejected30 ? "warn" : ""}">${fmt(l.rejected30)}</td><td>${fmt(l.no_code30)}</td>
       <td class="spark-cell">${spark(l.daily.slice(-14))}</td></tr>`).join("");
@@ -170,11 +170,12 @@
       return `<div class="loc-item card">
         ${img}
         <div class="loc-main">
-          <div class="loc-name">${esc(tr(l.name))} ${l.published ? "" : '<span class="badge">skrivena</span>'} ${l.stamp_enabled ? "" : '<span class="badge">bez pečata</span>'}</div>
+          <div class="loc-name">${esc(tr(l.name))} ${l.published ? '<span class="badge on">aktivna</span>' : '<span class="badge warn">isključena</span>'} ${l.stamp_enabled ? "" : '<span class="badge">bez pečata</span>'}</div>
           <div class="muted small">/${esc(l.slug)} · ${l.lat.toFixed(5)}, ${l.lng.toFixed(5)} ${l.coords_verified ? "✓" : "(koordinate neprovjerene)"} · ${l.mode === "car" ? "autom" : "pješice"}</div>
           ${s ? `<div class="muted small">Danas ${fmt(s.today)} · 7 dana ${fmt(s.d7)} · pečati ${fmt(s.stamps)}</div>` : ""}
         </div>
         <div class="loc-btns">
+          <button class="btn small ${l.published ? "danger" : ""}" data-toggle="${esc(l.id)}">${l.published ? "Isključi" : "Uključi"}</button>
           <button class="btn small" data-qr="${esc(l.id)}">QR kod</button>
           <a class="btn small" href="/${esc(l.slug)}" target="_blank" rel="noopener">Otvori</a>
           <button class="btn small primary" data-edit="${esc(l.id)}">Uredi</button>
@@ -185,7 +186,22 @@
   $("locList").addEventListener("click", e => {
     const ed = e.target.closest("[data-edit]"); if (ed) return editLocation(locs.find(l => l.id === ed.dataset.edit));
     const q = e.target.closest("[data-qr]"); if (q) return openQr(locs.find(l => l.id === q.dataset.qr));
+    const tg = e.target.closest("[data-toggle]"); if (tg) return toggleLocation(locs.find(l => l.id === tg.dataset.toggle), tg);
   });
+  // Uključi / isključi lokaciju: isključena se ne prikazuje na sajtu, mapama, rutama ni u pasošu
+  async function toggleLocation(l, btn) {
+    const on = !l.published;
+    const msg = on
+      ? `Uključiti „${tr(l.name)}”? Lokacija će se ponovo prikazivati na sajtu i na mapama.`
+      : `Isključiti „${tr(l.name)}”? Lokacija se više neće prikazivati na sajtu ni na mapama (statistika i podaci ostaju sačuvani). Skeniranje njene table vodi na početnu stranicu.`;
+    if (!confirm(msg)) return;
+    btn.disabled = true;
+    const {error} = await db.from("locations").update({published: on}).eq("id", l.id);
+    if (error) { alert("Greška: " + error.message); btn.disabled = false; return; }
+    await loadLocations();
+    renderLocList();
+    $("routesMsg").textContent = `${on ? "Uključeno" : "Isključeno"}: ${tr(l.name)}. Promjena je na sajtu za najviše 1 minutu.`;
+  }
   $("newLoc").addEventListener("click", () => editLocation(null));
 
   /* ---------- polja forme ---------- */
@@ -294,7 +310,7 @@
         </div>
         ${isNew ? "" : `<p class="note small">Pažnja: promjena slug-a mijenja adresu (/${esc(l.slug)}). Već odštampani QR kodovi tada više ne vode na ovu lokaciju.</p>`}
         <div class="checks">
-          <label><input type="checkbox" name="published" ${l.published ? "checked" : ""}> Objavljena (vidljiva turistima)</label>
+          <label><input type="checkbox" name="published" ${l.published ? "checked" : ""}> Aktivna (prikazuje se na sajtu i mapama)</label>
           <label><input type="checkbox" name="stamp_enabled" ${l.stamp_enabled ? "checked" : ""}> Pečat aktivan za ovu lokaciju</label>
           <label><input type="checkbox" name="coords_verified" ${l.coords_verified ? "checked" : ""}> Koordinate provjerene</label>
         </div>

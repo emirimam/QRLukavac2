@@ -1,7 +1,16 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/print", "destination": "/admin/print.html" },
-    { "source": "/:id", "destination": "/index.html" }
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/print",
+      "destination": "/admin/print.html"
+    },
+    {
+      "source": "/:id",
+      "destination": "/lokacija.html"
+    }
   ]
 }

@@ -82,6 +82,7 @@
   }
   $("statsRefresh").addEventListener("click", loadStats);
   $("trendLoc").addEventListener("change", renderCharts);
+  $("trendKind").addEventListener("change", renderCharts);
 
   function kpi(label, value, sub = "", cls = "") {
     return `<div class="kpi ${cls}"><div class="kpi-label">${esc(label)}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub}</div></div>`;
@@ -89,14 +90,16 @@
   function renderStats() {
     const T = stats.total;
     $("statsWhen").textContent = "Stanje: " + new Date(stats.generatedAt).toLocaleString("bs-BA", {dateStyle: "short", timeStyle: "short"});
-    const diff = T.today - T.yesterday;
+    const q = (o, k) => o["qr_" + k] ?? 0; // QR skeniranja = otvaranja sa kodom iz QR-a (ispravnim ili pogrešnim)
+    const diff = q(T, "today") - q(T, "yesterday");
     $("statsWarn").hidden = stats.stampsEnabled !== false;
     $("statsWarn").textContent = "Pečati su trenutno globalno isključeni (Postavke).";
     $("kpis").innerHTML = [
-      kpi("Danas", fmt(T.today), `${diff >= 0 ? "+" : "−"}${fmt(Math.abs(diff))} u odnosu na jučer`, "hero"),
-      kpi("Jučer", fmt(T.yesterday)),
-      kpi("Zadnjih 7 dana", fmt(T.d7)),
-      kpi("Zadnjih 30 dana", fmt(T.d30), `ukupno ${fmt(T.total)}`),
+      kpi("QR skeniranja danas", fmt(q(T, "today")), `${diff >= 0 ? "+" : "−"}${fmt(Math.abs(diff))} u odnosu na jučer`, "hero"),
+      kpi("Jučer", fmt(q(T, "yesterday"))),
+      kpi("Zadnjih 7 dana", fmt(q(T, "d7"))),
+      kpi("Zadnjih 30 dana", fmt(q(T, "d30")), `ukupno ${fmt(q(T, "total"))}`),
+      kpi("Sva otvaranja stranica", fmt(T.d30), `30 dana, s QR-om i bez njega · danas ${fmt(T.today)}`),
       kpi("Unikatni uređaji", fmt(T.uniq30), `30 dana · danas ${fmt(T.uniq_today)} · 7 dana ${fmt(T.uniq7)}`),
       kpi("Dodijeljeni pečati", fmt(T.stamps), `danas ${fmt(T.stamps_today)}`),
       kpi("GPS potvrđeni pečati", pct(T.stamps_gps, T.stamps), `${fmt(T.stamps_gps)} od ${fmt(T.stamps)}`),
@@ -110,14 +113,14 @@
 
     const rows = stats.locations.map(l => `<tr data-id="${esc(l.id)}" class="${l.published ? "" : "off"}">
       <th scope="row">${esc(tr(l.name))}${l.published ? "" : ' <span class="badge warn">isključena</span>'}${l.stamp_enabled ? "" : ' <span class="badge">bez pečata</span>'}</th>
-      <td>${fmt(l.today)}</td><td>${fmt(l.yesterday)}</td><td>${fmt(l.d7)}</td><td>${fmt(l.d30)}</td><td>${fmt(l.uniq30)}</td>
+      <td>${fmt(q(l, "today"))}</td><td>${fmt(q(l, "yesterday"))}</td><td>${fmt(q(l, "d7"))}</td><td>${fmt(q(l, "d30"))}</td><td>${fmt(l.d30)}</td><td>${fmt(l.uniq30)}</td>
       <td>${fmt(l.stamps)}</td><td>${pct(l.stamps_gps, l.stamps)}</td><td class="${l.rejected30 ? "warn" : ""}">${fmt(l.rejected30)}</td><td>${fmt(l.no_code30)}</td>
-      <td class="spark-cell">${spark(l.daily.slice(-14))}</td></tr>`).join("");
-    $("statsTable").innerHTML = `<thead><tr><th>Lokacija</th><th>Danas</th><th>Jučer</th><th>7 dana</th><th>30 dana</th><th>Unikatni<br><small>30 dana</small></th>
+      <td class="spark-cell">${spark((l.qr_daily || l.daily).slice(-14))}</td></tr>`).join("");
+    $("statsTable").innerHTML = `<thead><tr><th>Lokacija</th><th>QR danas</th><th>QR jučer</th><th>QR 7 dana</th><th>QR 30 dana</th><th>Otvaranja<br><small>30 dana</small></th><th>Unikatni<br><small>30 dana</small></th>
       <th>Pečati</th><th>GPS</th><th>Odbijeni<br><small>30 dana</small></th><th>Bez koda<br><small>30 dana</small></th><th>14 dana</th></tr></thead>
       <tbody>${rows}</tbody>
-      <tfoot><tr><th>Ukupno</th><td>${fmt(T.today)}</td><td>${fmt(T.yesterday)}</td><td>${fmt(T.d7)}</td><td>${fmt(T.d30)}</td><td>${fmt(T.uniq30)}</td>
-      <td>${fmt(T.stamps)}</td><td>${pct(T.stamps_gps, T.stamps)}</td><td>${fmt(T.rejected30)}</td><td></td><td class="spark-cell">${spark(T.daily.slice(-14))}</td></tr></tfoot>`;
+      <tfoot><tr><th>Ukupno</th><td>${fmt(q(T, "today"))}</td><td>${fmt(q(T, "yesterday"))}</td><td>${fmt(q(T, "d7"))}</td><td>${fmt(q(T, "d30"))}</td><td>${fmt(T.d30)}</td><td>${fmt(T.uniq30)}</td>
+      <td>${fmt(T.stamps)}</td><td>${pct(T.stamps_gps, T.stamps)}</td><td>${fmt(T.rejected30)}</td><td></td><td class="spark-cell">${spark((T.qr_daily || T.daily).slice(-14))}</td></tr></tfoot>`;
     renderCharts();
   }
   $("statsTable").addEventListener("click", e => {
@@ -156,9 +159,11 @@
     if (!stats) return;
     const id = $("trendLoc").value;
     const src = id ? stats.locations.find(l => l.id === id) : stats.total;
+    const all = $("trendKind").value === "all";
+    const word = all ? "otvaranja" : "QR skeniranja";
     const days = stats.days.map(d => { const [, m, dd] = d.split("-"); return `${+dd}.${+m}.`; });
-    barChart($("trendChart"), src.daily, days, {labelEvery: 5, tip: (v, l) => `${l} — ${v} skeniranja`});
-    barChart($("hourChart"), src.hourly, [...Array(24).keys()].map(h => String(h)), {labelEvery: 3, tip: (v, l) => `${l}:00–${l}:59 — ${v} skeniranja`});
+    barChart($("trendChart"), all ? src.daily : (src.qr_daily || src.daily), days, {labelEvery: 5, tip: (v, l) => `${l} — ${v} ${word}`});
+    barChart($("hourChart"), all ? src.hourly : (src.qr_hourly || src.hourly), [...Array(24).keys()].map(h => String(h)), {labelEvery: 3, tip: (v, l) => `${l}:00–${l}:59 — ${v} ${word}`});
   }
 
   /* ================= LOKACIJE ================= */

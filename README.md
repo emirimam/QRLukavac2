@@ -15,7 +15,7 @@ Bez instalacije aplikacije. Statični sajt (HTML, CSS, JS, Leaflet, OpenStreetMa
 Adresa: **`/admin`** (prijava emailom i lozinkom, Supabase Auth; pristup imaju samo korisnici iz tabele `admins`).
 
 - **Statistika** (početni ekran): skeniranja danas / jučer / 7 / 30 dana, unikatni uređaji, trend po danima, raspodjela po satima, dodijeljeni pečati, udio GPS potvrđenih pečata, odbijeni pokušaji, izdate i iskorištene nagrade — ukupno i po lokaciji (klik na red mijenja graf). Vrijeme je po Sarajevu.
-- **Lokacije**: sve lokacije su u bazi; dodavanje i uređivanje bez izmjene koda (naziv, slug, koordinate na mapi, GPS radijus, tekstovi BS/EN/DE, „Saznaj više”, izvori, glavna fotografija, galerija, „nekad i sad”, audio po jezicima — sa uploadom, pregledom i reprodukcijom). Lokacija se ne briše (da se sačuva statistika), nego se isključi „Objavljena”. Dugme **Preračunaj rute** računa rute preko besplatnog OSRM/FOSSGIS servera i sprema ih u bazu.
+- **Lokacije**: dugme **Uključi/Isključi** po lokaciji; isključena lokacija se ne prikazuje na početnoj stranici, mapama, rutama ni u pasošu, a skeniranje njene table vodi na početnu stranicu. Sve lokacije su u bazi; dodavanje i uređivanje bez izmjene koda (naziv, slug, koordinate na mapi, GPS radijus, tekstovi BS/EN/DE, „Saznaj više”, izvori, glavna fotografija, galerija, „nekad i sad”, audio po jezicima — sa uploadom, pregledom i reprodukcijom). Lokacija se ne briše (da se sačuva statistika), nego se isključi „Objavljena”. Dugme **Preračunaj rute** računa rute preko besplatnog OSRM/FOSSGIS servera i sprema ih u bazu.
 - **QR kod** po lokaciji: pregled, print table (A4, A5, mala naljepnica), preuzimanje PNG/SVG, print sadržaja lokacije, **regeneracija tajnog koda**.
 - **Nagrade**: naziv, opis, broj pečata i/ili konkretne lokacije, sponzor (naziv, logo, link), aktivno, rok važenja.
 - **Provjera koda**: sponzor/admin upiše kod koji turist pokaže (npr. `K7MQ-4XPA`) i označi ga kao iskorišten.
@@ -73,7 +73,8 @@ Lokalno sa API-jem: `npx vercel dev` (uz `SUPABASE_URL` i `SUPABASE_ANON_KEY` u 
 ## Struktura
 
 ```
-index.html, style.css, app.js
+index.html, home.js, home.css   ← početna stranica: o projektu, mapa i spisak svih aktivnih lokacija
+lokacija.html, app.js, style.css ← stranica lokacije (/setaliste, /vila …): mapa, rute, tekst, audio, pasoš
 vercel.json           ← kratke adrese (/vila) i keširanje
 data/locations.json   ← lokacije: ime, tekst, slike, audio, koordinate (po jezicima bs/en/de)
 data/events.json      ← događaji

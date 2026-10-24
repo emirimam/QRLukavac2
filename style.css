@@ -127,6 +127,27 @@ main{display:flex;flex-direction:column}
 .pdot{font-size:12.5px;padding:4px 9px;border-radius:999px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
 .pdot.on{background:var(--deep);color:#fff;border-color:var(--deep)}
 .passport-reward{margin:10px 0 0;font-size:14.5px;color:var(--ink)}
+.passport-status{margin:10px 0 0;font-size:14.5px;font-weight:600;color:var(--muted)}
+.passport-status.ok{color:var(--green)}
+.passport-status.bad{color:#b42318}
+.stamp.dim{opacity:.35;filter:grayscale(1)}
+.gps-tick{font-size:12px;opacity:.8}
+.rewards{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.rewards h3{font:700 17px/1.2 var(--f-display);margin:0 0 8px}
+.reward{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--bg)}
+.reward.won{border-color:var(--green);background:#eef8f2}
+.rw-head{display:flex;gap:10px;align-items:center}
+.rw-logo{width:40px;height:40px;object-fit:contain;border-radius:8px;background:#fff;flex:none}
+.rw-title{font-weight:600}
+.rw-sponsor,.rw-until,.rw-need{font-size:13.5px;color:var(--muted)}
+.rw-desc{margin:6px 0;font-size:14.5px}
+.rw-prog{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:8px 0 4px}
+.rw-prog span{display:block;height:100%;background:var(--green);border-radius:4px}
+.rw-pl{display:inline-block;margin:2px 4px 0 0;padding:1px 7px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12.5px}
+.rw-pl.on{border-color:var(--green);color:var(--green)}
+.rw-code{margin-top:8px;font-size:13.5px;color:var(--muted)}
+.rw-code b{display:inline-block;margin-top:4px;font:700 24px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;color:var(--ink);background:#fff;border:2px dashed var(--green);border-radius:10px;padding:6px 12px}
+.rw-code.used b{text-decoration:line-through;opacity:.5;border-color:var(--line)}
 .seen{font-size:12px;font-weight:600;color:var(--green);margin-left:4px;white-space:nowrap}
 
 /* DOGAĐAJI */

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="bs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin · Lukavac Info</title>
+<meta name="theme-color" content="#123b34">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <div id="boot" class="boot">Učitavanje…</div>
+
+  <!-- PRIJAVA -->
+  <section id="login" class="login" hidden>
+    <form id="loginForm" class="card login-card">
+      <h1>Lukavac Info · Admin</h1>
+      <label>Email<input type="email" name="email" autocomplete="username" required></label>
+      <label>Lozinka<input type="password" name="password" autocomplete="current-password" required></label>
+      <button class="btn primary" type="submit">Prijava</button>
+      <p class="msg" id="loginMsg"></p>
+    </form>
+  </section>
+
+  <!-- APLIKACIJA -->
+  <div id="app" hidden>
+    <header class="top">
+      <div class="brand">Lukavac Info <span>admin</span></div>
+      <nav id="tabs" class="tabs" role="tablist">
+        <button data-tab="stats" class="on">Statistika</button>
+        <button data-tab="locations">Lokacije</button>
+        <button data-tab="rewards">Nagrade</button>
+        <button data-tab="claims">Provjera koda</button>
+        <button data-tab="settings">Postavke</button>
+      </nav>
+      <div class="who"><span id="who"></span> <button class="btn small" id="changePw" type="button">Lozinka</button> <button class="btn small" id="logout" type="button">Odjava</button></div>
+    </header>
+
+    <main class="wrap">
+      <!-- STATISTIKA -->
+      <section data-view="stats">
+        <div class="row-head">
+          <h1>Statistika skeniranja</h1>
+          <div class="row-tools"><span class="muted" id="statsWhen"></span><button class="btn small" id="statsRefresh" type="button">Osvježi</button></div>
+        </div>
+        <div id="statsWarn" class="note" hidden></div>
+        <div id="kpis" class="kpis"></div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-head"><h2>Skeniranja po danima <span class="muted">(zadnjih 30 dana)</span></h2>
+              <select id="trendLoc" aria-label="Lokacija za graf"></select></div>
+            <div id="trendChart" class="chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Po satima <span class="muted">(zadnjih 30 dana)</span></h2></div>
+            <div id="hourChart" class="chart"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Po lokacijama</h2>
+          <div class="table-wrap"><table class="tbl" id="statsTable"></table></div>
+          <p class="muted small">Unikatni uređaji = različiti anonimni ID-ovi preglednika (bez ličnih podataka). Odbijeni = pogrešan ili istekli kod iz QR-a. GPS potvrđeni = pečat dobijen unutar radijusa lokacije.</p>
+        </div>
+      </section>
+
+      <!-- LOKACIJE -->
+      <section data-view="locations" hidden>
+        <div class="row-head">
+          <h1>Lokacije</h1>
+          <div class="row-tools">
+            <button class="btn small" id="routesBtn" type="button">Preračunaj rute</button>
+            <button class="btn primary" id="newLoc" type="button">+ Nova lokacija</button>
+          </div>
+        </div>
+        <p class="muted small" id="routesMsg"></p>
+        <div id="locList" class="loc-list"></div>
+      </section>
+
+      <!-- UREĐIVANJE LOKACIJE -->
+      <section data-view="edit" hidden>
+        <div class="row-head">
+          <h1 id="editTitle">Lokacija</h1>
+          <div class="row-tools">
+            <button class="btn" type="button" data-back>← Nazad</button>
+            <button class="btn primary" type="button" id="saveLoc">Spremi</button>
+          </div>
+        </div>
+        <p class="msg" id="editMsg"></p>
+        <form id="locForm" class="edit-grid" autocomplete="off"></form>
+      </section>
+
+      <!-- NAGRADE -->
+      <section data-view="rewards" hidden>
+        <div class="row-head">
+          <h1>Nagrade i sponzori</h1>
+          <div class="row-tools"><button class="btn primary" id="newReward" type="button">+ Nova nagrada</button></div>
+        </div>
+        <div id="rewardList" class="loc-list"></div>
+      </section>
+
+      <section data-view="rewardEdit" hidden>
+        <div class="row-head">
+          <h1 id="rewardTitle">Nagrada</h1>
+          <div class="row-tools">
+            <button class="btn" type="button" data-back>← Nazad</button>
+            <button class="btn primary" type="button" id="saveReward">Spremi</button>
+          </div>
+        </div>
+        <p class="msg" id="rewardMsg"></p>
+        <form id="rewardForm" class="edit-grid" autocomplete="off"></form>
+      </section>
+
+      <!-- PROVJERA KODA NAGRADE -->
+      <section data-view="claims" hidden>
+        <h1>Provjera koda za nagradu</h1>
+        <form id="claimForm" class="card claim-form">
+          <label>Kod koji pokazuje turist<input id="claimInput" placeholder="npr. K7MQ-4XPA" autocapitalize="characters" required></label>
+          <button class="btn primary" type="submit">Provjeri</button>
+        </form>
+        <div id="claimResult"></div>
+        <div class="card">
+          <h2>Zadnje izdate nagrade</h2>
+          <div class="table-wrap"><table class="tbl" id="claimsTable"></table></div>
+        </div>
+      </section>
+
+      <!-- POSTAVKE -->
+      <section data-view="settings" hidden>
+        <div class="row-head">
+          <h1>Postavke</h1>
+          <div class="row-tools"><button class="btn primary" type="button" id="saveSettings">Spremi</button></div>
+        </div>
+        <p class="msg" id="settingsMsg"></p>
+        <form id="settingsForm" class="edit-grid" autocomplete="off"></form>
+      </section>
+    </main>
+  </div>
+
+  <!-- QR dijalog -->
+  <dialog id="qrDlg" class="dlg">
+    <form method="dialog" class="dlg-close"><button class="btn small" aria-label="Zatvori">×</button></form>
+    <h2 id="qrName"></h2>
+    <div id="qrBox" class="qr-box"></div>
+    <p class="qr-url"><code id="qrUrl"></code></p>
+    <p class="muted small">Kod <b id="qrCode"></b> je tajan: objavljuje se samo u QR-u na tabli. Kad ga regenerišete, stari QR odmah prestaje davati pečat (lokacija se i dalje otvara).</p>
+    <div class="btns">
+      <a class="btn primary" id="qrPrintA4" target="_blank">Print tabla A4</a>
+      <a class="btn" id="qrPrintA5" target="_blank">Print A5</a>
+      <a class="btn" id="qrPrintSmall" target="_blank">Print mali (naljepnica)</a>
+      <button class="btn" type="button" id="qrPng">Preuzmi PNG</button>
+      <button class="btn" type="button" id="qrSvg">Preuzmi SVG</button>
+      <a class="btn" id="qrContent" target="_blank">Print sadržaja lokacije</a>
+      <button class="btn danger" type="button" id="qrRegen">Regeneriši kod</button>
+    </div>
+  </dialog>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="/admin/vendor/supabase.js"></script>
+  <script src="/admin/vendor/qrcode.js"></script>
+  <script src="/admin/shared.js"></script>
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

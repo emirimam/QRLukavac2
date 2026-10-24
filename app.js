@@ -257,6 +257,11 @@
     });
   }
   let scanPending = false;
+  // u ovom pregledniku je prijavljen admin (Supabase sesija iz /admin) -> pregled se ne broji u statistici
+  function isAdminBrowser() {
+    try { for (let i = 0; i < localStorage.length; i++) if (/^sb-.+-auth-token$/.test(localStorage.key(i))) return true; } catch {}
+    return false;
+  }
   async function recordScan(code) {
     const wantStamp = !!code && data.stampsEnabled !== false && here.stampEnabled !== false;
     scanPending = wantStamp;
@@ -264,7 +269,7 @@
     try {
       const r = await fetch("/api/scan", {
         method: "POST", headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({slug: here.id, k: code || null, device: deviceId(), gps})
+        body: JSON.stringify({slug: here.id, k: code || null, device: deviceId(), gps, admin: isAdminBrowser()})
       });
       scanResult = await r.json().catch(() => null);
     } catch { scanResult = null; }

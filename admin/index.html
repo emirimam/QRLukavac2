@@ -48,8 +48,9 @@
         <div id="kpis" class="kpis"></div>
         <div class="grid2">
           <div class="card">
-            <div class="card-head"><h2>Skeniranja po danima <span class="muted">(zadnjih 30 dana)</span></h2>
-              <select id="trendLoc" aria-label="Lokacija za graf"></select></div>
+            <div class="card-head"><h2>Po danima <span class="muted">(zadnjih 30 dana)</span></h2>
+              <span class="row-tools"><select id="trendKind" aria-label="Šta graf prikazuje"><option value="qr">QR skeniranja</option><option value="all">Sva otvaranja</option></select>
+              <select id="trendLoc" aria-label="Lokacija za graf"></select></span></div>
             <div id="trendChart" class="chart"></div>
           </div>
           <div class="card">
@@ -60,7 +61,7 @@
         <div class="card">
           <h2>Po lokacijama</h2>
           <div class="table-wrap"><table class="tbl" id="statsTable"></table></div>
-          <p class="muted small">Unikatni uređaji = različiti anonimni ID-ovi preglednika (bez ličnih podataka). Odbijeni = pogrešan ili istekli kod iz QR-a. GPS potvrđeni = pečat dobijen unutar radijusa lokacije.</p>
+          <p class="muted small">QR skeniranje = stranica otvorena preko QR koda sa table (sa kodom). Otvaranja = sva otvaranja stranice lokacije, i preko linka bez koda. Ponovno otvaranje iste lokacije s istog uređaja u roku od 30 minuta (osvježavanje, povratak nazad) ne broji se ponovo, a ni pregledi iz preglednika u kojem je admin prijavljen. Unikatni uređaji = različiti anonimni ID-ovi preglednika (bez ličnih podataka). Odbijeni = pogrešan ili istekli kod iz QR-a. GPS potvrđeni = pečat dobijen unutar radijusa lokacije.</p>
         </div>
       </section>
 

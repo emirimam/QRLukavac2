@@ -1,7 +1,7 @@
 // Supabase Edge funkcija "public-api": jedini javni ulaz za podatke o lokacijama, skeniranja i pasoš.
 // Radi sa service_role ključem (automatski dostupan u Edge okruženju); tajni kodovi se nikad ne vraćaju.
 //   GET  ?action=locations
-//   POST ?action=scan      body: { slug, k, device, gps: { status, lat, lng } }
+//   POST ?action=scan      body: { slug, k, device, gps: { status, lat, lng }, admin? }
 //   GET  ?action=passport&device=…
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
@@ -78,6 +78,8 @@ Deno.serve(async (req) => {
         p_gps_status: status,
         p_lat: status === "granted" ? num(b.gps?.lat) : null,
         p_lng: status === "granted" ? num(b.gps?.lng) : null,
+        // pregled iz preglednika u kojem je admin prijavljen ne ulazi u statistiku
+        p_count: b.admin !== true,
       });
       if (error) throw error;
       return json((data as any)?.ok ? 200 : 404, data);

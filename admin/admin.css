@@ -138,3 +138,4 @@ fieldset.ml label{grid-template-columns:34px 1fr;align-items:start}
 .claim-form input{font:700 20px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}
 .claim.ok{border-color:var(--green)} .claim.bad{border-color:var(--danger)}
 .claim-code{font:700 26px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em}
+.card-head select{width:auto}

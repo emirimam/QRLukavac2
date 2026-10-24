@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/:id([a-z0-9-]+)", "destination": "/index.html" }
+   { "source": "/:id([a-z0-9-]+)", "destination": "/" }
   ],
   "headers": [
     { "source": "/data/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=300" }] },

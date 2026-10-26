@@ -38,7 +38,7 @@
       ],
       aboutTitle: "O projektu",
       aboutText: "Digitalnu info stazu Lukavca izradilo je Udruženje mladih StartITi, na poziv Turističke zajednice Lukavac.",
-      aboutText2: "Cilj je da posjetioci i mještani na jednostavan način upoznaju historiju i znamenitosti grada, uz besplatne i otvorene alate: mape su OpenStreetMap, a stranice rade u svakom pregledniku, bez instalacije.",
+      aboutText2: "Cilj je da posjetioci i mještani na jednostavan način, uz pomoć modernih tehnologija, upoznaju historiju i znamenitosti grada.",
       noPlaces: "Lokacije trenutno nisu dostupne. Pokušajte ponovo malo kasnije."
     },
     en: {
@@ -70,7 +70,7 @@
       ],
       aboutTitle: "About the project",
       aboutText: "The Lukavac digital info trail was created by the StartITi youth association, at the invitation of the Lukavac Tourist Board.",
-      aboutText2: "The aim is to let visitors and locals discover the town's history and sights in a simple way, using free and open tools: maps are OpenStreetMap, and the pages work in any browser without installing anything.",
+      aboutText2: "The aim is to help visitors and locals discover the town's history and sights in a simple way, with the help of modern technology.",
       noPlaces: "Places are not available right now. Please try again later."
     },
     de: {
@@ -102,7 +102,7 @@
       ],
       aboutTitle: "Über das Projekt",
       aboutText: "Der digitale Info-Pfad Lukavac wurde vom Jugendverein StartITi auf Einladung des Tourismusverbands Lukavac erstellt.",
-      aboutText2: "Ziel ist, dass Besucher und Einheimische die Geschichte und Sehenswürdigkeiten der Stadt einfach kennenlernen – mit freien und offenen Werkzeugen: Die Karten stammen von OpenStreetMap, und die Seiten funktionieren in jedem Browser ohne Installation.",
+      aboutText2: "Ziel ist, dass Besucher und Einheimische die Geschichte und Sehenswürdigkeiten der Stadt mithilfe moderner Technologien einfach kennenlernen.",
       noPlaces: "Die Orte sind gerade nicht verfügbar. Bitte versuchen Sie es später erneut."
     }
   };

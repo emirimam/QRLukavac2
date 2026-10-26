@@ -381,7 +381,7 @@
     if (typeof L === "undefined") { $("editMap").textContent = "Mapa nije učitana."; return; }
     const f = $("locForm");
     editMap = L.map("editMap").setView([l.lat, l.lng], 16);
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "© OpenStreetMap"}).addTo(editMap);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "© OpenStreetMap", referrerPolicy: "strict-origin-when-cross-origin"}).addTo(editMap);
     locs.filter(o => o !== editing).forEach(o => L.circleMarker([o.lat, o.lng], {radius: 5, color: "#123b34", weight: 2, fillOpacity: .6}).bindTooltip(tr(o.name)).addTo(editMap));
     editMarker = L.marker([l.lat, l.lng], {draggable: true}).addTo(editMap);
     const circle = L.circle([l.lat, l.lng], {radius: +l.gps_radius_m || 150, color: "#e4572e", weight: 1, fillOpacity: .08}).addTo(editMap);
@@ -435,39 +435,121 @@
     msg.textContent = "✓ Spremljeno " + new Date().toLocaleTimeString("bs-BA") + ". Promjene su na sajtu za najviše 1 minutu.";
   });
 
-  /* ---------- rute (OSRM / FOSSGIS, besplatno) ---------- */
+  /* ---------- rute: uvijek pješačke (OSRM / FOSSGIS, besplatno) ---------- */
+  // Ruta ide kroz zadane međutačke (via) ako ih je admin postavio u uređivaču putanje.
+  async function walkRoute(points) {
+    const path = points.map(([lat, lng]) => `${lng},${lat}`).join(";");
+    const j = await (await fetch(`https://routing.openstreetmap.de/routed-foot/route/v1/driving/${path}?overview=full&geometries=geojson`)).json();
+    if (j.code !== "Ok") throw new Error(j.code || "ruta");
+    const r = j.routes[0];
+    return {distance: Math.round(r.distance), duration: Math.round(r.duration), coords: r.geometry.coordinates.map(([lng, lat]) => [+lat.toFixed(6), +lng.toFixed(6)])};
+  }
+  const routeRow = (a, b, r, via) => ({
+    from_id: a.id, to_id: b.id, mode: "foot", distance: r.distance, duration: r.duration, coords: r.coords, via: via && via.length ? via : null,
+    from_lat: a.lat, from_lng: a.lng, to_lat: b.lat, to_lng: b.lng, updated_at: new Date().toISOString()
+  });
   $("routesBtn").addEventListener("click", async () => {
     const btn = $("routesBtn"), msg = $("routesMsg");
     btn.disabled = true;
     const pub = locs.filter(l => l.published);
-    const {data: existing} = await db.from("routes").select("from_id,to_id,from_lat,from_lng,to_lat,to_lng,mode");
-    const ok = new Set((existing || []).filter(r => {
-      const a = pub.find(l => l.id === r.from_id), b = pub.find(l => l.id === r.to_id);
-      return a && b && r.from_lat === a.lat && r.from_lng === a.lng && r.to_lat === b.lat && r.to_lng === b.lng && r.mode === (b.mode === "car" ? "car" : "foot");
-    }).map(r => r.from_id + ">" + r.to_id));
+    const {data: existing} = await db.from("routes").select("from_id,to_id,from_lat,from_lng,to_lat,to_lng,mode,via");
+    const byKey = new Map((existing || []).map(r => [r.from_id + ">" + r.to_id, r]));
     const todo = [];
-    for (const a of pub) for (const b of pub) if (a !== b && !ok.has(a.id + ">" + b.id)) todo.push([a, b]);
-    if (!todo.length) { msg.textContent = "Sve rute su ažurne."; btn.disabled = false; return; }
+    for (const a of pub) for (const b of pub) {
+      if (a === b) continue;
+      const r = byKey.get(a.id + ">" + b.id);
+      const fresh = r && r.mode === "foot" && r.from_lat === a.lat && r.from_lng === a.lng && r.to_lat === b.lat && r.to_lng === b.lng;
+      if (!fresh) todo.push([a, b, r?.via || null]);
+    }
+    if (!todo.length) { msg.textContent = "Sve pješačke rute su ažurne."; btn.disabled = false; return; }
     let done = 0, fail = 0;
-    for (const [a, b] of todo) {
-      msg.textContent = `Računam rute: ${done + fail + 1} / ${todo.length} (${tr(a.name)} → ${tr(b.name)})…`;
-      const mode = b.mode === "car" ? "car" : "foot";
+    for (const [a, b, via] of todo) {
+      msg.textContent = `Računam pješačke rute: ${done + fail + 1} / ${todo.length} (${tr(a.name)} → ${tr(b.name)})…`;
       try {
-        const j = await (await fetch(`https://routing.openstreetmap.de/routed-${mode}/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`)).json();
-        if (j.code !== "Ok") throw new Error(j.code);
-        const r = j.routes[0];
-        const {error} = await db.from("routes").upsert({
-          from_id: a.id, to_id: b.id, mode, distance: Math.round(r.distance), duration: Math.round(r.duration),
-          coords: r.geometry.coordinates.map(([lng, lat]) => [+lat.toFixed(6), +lng.toFixed(6)]),
-          from_lat: a.lat, from_lng: a.lng, to_lat: b.lat, to_lng: b.lng, updated_at: new Date().toISOString()
-        });
+        const r = await walkRoute([[a.lat, a.lng], ...(via || []), [b.lat, b.lng]]);
+        const {error} = await db.from("routes").upsert(routeRow(a, b, r, via));
         if (error) throw error;
         done++;
       } catch { fail++; }
       await new Promise(r => setTimeout(r, 1100)); // javni server: 1 zahtjev u sekundi
     }
-    msg.textContent = `Gotovo: ${done} ruta spremljeno${fail ? `, ${fail} neuspjelo (aplikacija tada računa rutu uživo ili crta ravnu liniju)` : ""}.`;
+    msg.textContent = `Gotovo: ${done} pješačkih ruta spremljeno${fail ? `, ${fail} neuspjelo (aplikacija tada računa rutu uživo ili crta ravnu liniju)` : ""}.`;
     btn.disabled = false;
+  });
+
+  /* ---------- uređivač putanje: međutačke kroz koje ruta mora proći ---------- */
+  let rtMap = null, rtLayers = null, rtVia = [], rtPreview = null;
+  $("routeEditBtn").addEventListener("click", () => {
+    const pub = locs.filter(l => l.published);
+    if (pub.length < 2) { $("routesMsg").textContent = "Za putanju trebaju bar dvije aktivne lokacije."; return; }
+    const opts = pub.map(l => `<option value="${esc(l.id)}">${esc(tr(l.name))}</option>`).join("");
+    $("rtFrom").innerHTML = opts; $("rtTo").innerHTML = opts; $("rtTo").selectedIndex = 1;
+    showView("routeEdit");
+    if (!rtMap && typeof L !== "undefined") {
+      rtMap = L.map("rtMap");
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom: 19, attribution: "© OpenStreetMap", referrerPolicy: "strict-origin-when-cross-origin"}).addTo(rtMap);
+      rtLayers = L.layerGroup().addTo(rtMap);
+      rtMap.on("click", e => { addVia([+e.latlng.lat.toFixed(6), +e.latlng.lng.toFixed(6)]); });
+    }
+    setTimeout(() => { rtMap?.invalidateSize(); loadPair(); }, 50);
+  });
+  $("rtFrom").addEventListener("change", loadPair);
+  $("rtTo").addEventListener("change", loadPair);
+  const rtPair = () => [locs.find(l => l.id === $("rtFrom").value), locs.find(l => l.id === $("rtTo").value)];
+  async function loadPair() {
+    const [a, b] = rtPair();
+    $("rtMsg").textContent = "";
+    if (!a || !b || a === b) { $("rtMsg").textContent = "Izaberite dvije različite lokacije."; drawRoute(null); return; }
+    const {data} = await db.from("routes").select("coords,distance,duration,via").eq("from_id", a.id).eq("to_id", b.id).maybeSingle();
+    rtVia = (data?.via || []).map(p => [p[0], p[1]]);
+    rtPreview = data ? {coords: data.coords, distance: data.distance, duration: data.duration} : null;
+    drawRoute(rtPreview, true);
+  }
+  // nova tačka se ubacuje tamo gdje najmanje produžava putanju
+  function addVia(pt) {
+    const [a, b] = rtPair(); if (!a || !b) return;
+    const pts = [[a.lat, a.lng], ...rtVia, [b.lat, b.lng]];
+    const d = (p, q) => Math.hypot(p[0] - q[0], (p[1] - q[1]) * Math.cos(p[0] * Math.PI / 180));
+    let best = 0, cost = Infinity;
+    for (let i = 0; i < pts.length - 1; i++) { const c = d(pts.at(i), pt) + d(pt, pts.at(i + 1)) - d(pts.at(i), pts.at(i + 1)); if (c < cost) { cost = c; best = i; } }
+    rtVia.splice(best, 0, pt);
+    recompute();
+  }
+  function drawRoute(r, fit) {
+    if (!rtMap) return;
+    rtLayers.clearLayers();
+    const [a, b] = rtPair();
+    if (a) L.circleMarker([a.lat, a.lng], {radius: 8, color: "#e4572e", weight: 3, fillOpacity: .9}).bindTooltip("Od: " + tr(a.name), {permanent: true, direction: "top"}).addTo(rtLayers);
+    if (b) L.circleMarker([b.lat, b.lng], {radius: 8, color: "#123b34", weight: 3, fillOpacity: .9}).bindTooltip("Do: " + tr(b.name), {permanent: true, direction: "top"}).addTo(rtLayers);
+    if (r?.coords?.length) L.polyline(r.coords, {color: "#2f7bff", weight: 5, opacity: .9}).addTo(rtLayers);
+    rtVia.forEach((p, i) => {
+      const m = L.marker(p, {draggable: true, title: `Međutačka ${i + 1}`, icon: L.divIcon({className: "", iconSize: [22, 22], iconAnchor: [11, 11],
+        html: `<div class="via-pin">${i + 1}</div>`})}).addTo(rtLayers);
+      m.on("dragend", () => { const ll = m.getLatLng(); rtVia.splice(i, 1, [+ll.lat.toFixed(6), +ll.lng.toFixed(6)]); recompute(); });
+      m.on("contextmenu", () => { rtVia.splice(i, 1); recompute(); });
+      m.on("dblclick", () => { rtVia.splice(i, 1); recompute(); });
+    });
+    $("rtInfo").textContent = r ? `Pješice: ${(r.distance / 1000).toFixed(2).replace(".", ",")} km · oko ${Math.max(1, Math.round(r.duration / 60))} min · međutačaka: ${rtVia.length}` : "Putanja još nije izračunata.";
+    if (fit && a && b) rtMap.fitBounds(L.latLngBounds([[a.lat, a.lng], [b.lat, b.lng], ...(r?.coords || [])]), {padding: [40, 40]});
+  }
+  async function recompute() {
+    const [a, b] = rtPair(); if (!a || !b || a === b) return;
+    $("rtMsg").textContent = "Računam pješačku putanju…";
+    try { rtPreview = await walkRoute([[a.lat, a.lng], ...rtVia, [b.lat, b.lng]]); $("rtMsg").textContent = "Pregled je spreman. Kliknite „Spremi putanju” kad je dobra."; }
+    catch (e) { $("rtMsg").textContent = "Greška pri računanju: " + e.message; }
+    drawRoute(rtPreview, false);
+  }
+  $("rtClear").addEventListener("click", () => { rtVia = []; recompute(); });
+  $("rtSave").addEventListener("click", async () => {
+    const [a, b] = rtPair(); if (!a || !b || a === b || !rtPreview) return;
+    $("rtMsg").textContent = "Spremanje…";
+    const rows = [routeRow(a, b, rtPreview, rtVia)];
+    if ($("rtBoth").checked) {
+      // suprotni smjer: iste međutačke obrnutim redom, ista linija unazad
+      rows.push(routeRow(b, a, {distance: rtPreview.distance, duration: rtPreview.duration, coords: [...rtPreview.coords].reverse()}, [...rtVia].reverse()));
+    }
+    const {error} = await db.from("routes").upsert(rows);
+    $("rtMsg").textContent = error ? "Greška: " + error.message : `✓ Spremljeno${rows.length > 1 ? " u oba smjera" : ""}. Na sajtu za najviše 1 minutu.`;
   });
 
   /* ---------- QR ---------- */

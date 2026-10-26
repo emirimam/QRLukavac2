@@ -70,6 +70,7 @@
         <div class="row-head">
           <h1>Lokacije</h1>
           <div class="row-tools">
+            <button class="btn small" id="routeEditBtn" type="button">Uredi putanje</button>
             <button class="btn small" id="routesBtn" type="button">Preračunaj rute</button>
             <button class="btn primary" id="newLoc" type="button">+ Nova lokacija</button>
           </div>
@@ -89,6 +90,29 @@
         </div>
         <p class="msg" id="editMsg"></p>
         <form id="locForm" class="edit-grid" autocomplete="off"></form>
+      </section>
+
+      <!-- UREĐIVAČ PUTANJE -->
+      <section data-view="routeEdit" hidden>
+        <div class="row-head">
+          <h1>Pješačka putanja između lokacija</h1>
+          <div class="row-tools"><button class="btn" type="button" data-back>← Nazad</button></div>
+        </div>
+        <div class="card">
+          <div class="cols3">
+            <label>Od<select id="rtFrom"></select></label>
+            <label>Do<select id="rtTo"></select></label>
+            <label class="rt-both"><span><input type="checkbox" id="rtBoth" checked> Ista putanja i u suprotnom smjeru</span></label>
+          </div>
+          <p class="muted small">Sve rute su pješačke. Kliknite na mapu da dodate međutačku kroz koju putanja mora proći (npr. ulicu kroz centar), povucite tačku da je pomjerite, a dvoklik ili desni klik je briše. Putanja se računa po ulicama i stazama iz OpenStreetMap-a.</p>
+          <div id="rtMap" class="edit-map rt-map"></div>
+          <p class="muted" id="rtInfo"></p>
+          <div class="row-tools">
+            <button class="btn primary" type="button" id="rtSave">Spremi putanju</button>
+            <button class="btn" type="button" id="rtClear">Ukloni međutačke</button>
+            <span class="msg" id="rtMsg"></span>
+          </div>
+        </div>
       </section>
 
       <!-- NAGRADE -->

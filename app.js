@@ -94,7 +94,7 @@
   // Ruta: 1) routes.json, 2) keš preglednika, 3) uživo sa OSRM, 4) ravna isprekidana linija
   async function getRoute(a, b, pre) {
     const key = a.id + ">" + b.id;
-    const mode = b.mode === "car" ? "car" : "foot";
+    const mode = "foot"; // sve rute su pješačke, kroz grad
     if (pre && pre[key]) return pre[key];
     const ck = "route:" + key + ":" + a.lat + a.lng + b.lat + b.lng;
     try { const c = JSON.parse(store.get(ck)); if (c) return c; } catch {}
@@ -328,7 +328,7 @@
     setImage($("sheetImg"), loc.image, tr(loc.name));
     setGallery($("sheetGallery"), loc);
     setAudio($("sheetAudio"), $("sheetAudioMissing"), audioFor(loc));
-    const travel = loc.mode === "car" ? "driving" : "walking";
+    const travel = "walking";
     $("sheetNav").href = `https://www.google.com/maps/dir/?api=1&origin=${here.lat},${here.lng}&destination=${loc.lat},${loc.lng}&travelmode=${travel}`;
     $("sheetFocus").onclick = () => focusRoute(loc.id);
     $("sheetClose").setAttribute("aria-label", t("close"));

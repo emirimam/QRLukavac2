@@ -139,3 +139,7 @@ fieldset.ml label{grid-template-columns:34px 1fr;align-items:start}
 .claim.ok{border-color:var(--green)} .claim.bad{border-color:var(--danger)}
 .claim-code{font:700 26px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em}
 .card-head select{width:auto}
+.rt-map{height:460px}
+.rt-both span{display:flex;gap:6px;align-items:center;color:var(--ink);font-weight:400;font-size:14px;margin-top:22px}
+.rt-both input{width:auto}
+.via-pin{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid #2f7bff;color:#14231f;font:700 11px/16px system-ui;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:grab}
